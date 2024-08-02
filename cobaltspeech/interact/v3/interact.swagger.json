@@ -1,0 +1,1095 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "cobaltspeech/interact/v3/interact.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "InteractService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/diatheke/v3/create-session": {
+      "post": {
+        "summary": "Create a new Cobalt Interact session. Also returns a list of\nactions to take next.",
+        "operationId": "InteractService_CreateSession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3CreateSessionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `CreateSession` method.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3CreateSessionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "InteractService"
+        ]
+      }
+    },
+    "/api/diatheke/v3/delete-session": {
+      "post": {
+        "summary": "Delete the session. Behavior is undefined if the given\nTokenData in the request is used again after this function is called.",
+        "operationId": "InteractService_DeleteSession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3DeleteSessionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `DeleteSession` method.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3DeleteSessionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "InteractService"
+        ]
+      }
+    },
+    "/api/diatheke/v3/list-models": {
+      "get": {
+        "summary": "ListModels returns information about the Cobalt Interact models\nthe server can access.",
+        "operationId": "InteractService_ListModels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/interactv3ListModelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "InteractService"
+        ]
+      }
+    },
+    "/api/diatheke/v3/stream-asr": {
+      "post": {
+        "summary": "Create an ASR stream. A result is returned when the\nstream is closed by the client (which forces the ASR to\nendpoint), or when a transcript becomes available on its\nown, in which case the stream is closed by the server.\nThe ASR result may be used in the UpdateSession method.\n\u003cbr/\u003e\u003cbr/\u003e\nIf the session has a wakeword enabled, and the client\napplication is using Cobalt Interact and Cobalt Transcribe\nto handle the wakeword processing, this method will not\nreturn a result until the wakeword condition has been\nsatisfied. Utterances without the required wakeword will\nbe discarded and no transcription will be returned.",
+        "operationId": "InteractService_StreamASR",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3StreamASRResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Data to send to the ASR stream. The first message on the\nstream must be the session token followed by audio data. (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3StreamASRRequest"
+            }
+          }
+        ],
+        "tags": [
+          "InteractService"
+        ]
+      }
+    },
+    "/api/diatheke/v3/stream-asr-with-partials": {
+      "post": {
+        "summary": "Performs bidirectional streaming speech recognition. Receive results while\nsending audio. Each result will either be a partial ASR result, or a final\nresult. Partial results will be sent as soon as they are ready, and all\nresults will be sent, regardless of any wakeword configuration in the\nsession. A final result will be sent exactly once, and the stream will be\nclosed then. If a session has a wakeword enabled, the final result will\nonly be emitted if the required wakeword is present. The ASRResult in the\nfinal message maybe used in the UpdateSession method for further dialog\nprocessing.",
+        "operationId": "InteractService_StreamASRWithPartials",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/v3StreamASRWithPartialsResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of v3StreamASRWithPartialsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level messages sent by the client for the `StreamASRWithPartials`\nmethod. In this streaming call, multiple `StreamASRWithPartialsRequest`\nmessages should be sent. The first message must contain a `TokenData`\nmessage only and all subsequent messages must contain audio data only. (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3StreamASRWithPartialsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "InteractService"
+        ]
+      }
+    },
+    "/api/diatheke/v3/stream-tts": {
+      "post": {
+        "summary": "Create a TTS stream to receive audio for the given reply.\nThe stream will close when TTS is finished. The client\nmay also close the stream early to cancel the speech\nsynthesis.",
+        "operationId": "InteractService_StreamTTS",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/v3StreamTTSResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of v3StreamTTSResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `StreamTTS` method.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3StreamTTSRequest"
+            }
+          }
+        ],
+        "tags": [
+          "InteractService"
+        ]
+      }
+    },
+    "/api/diatheke/v3/transcribe": {
+      "post": {
+        "summary": "Create an ASR stream for transcription. Unlike StreamASR,\nTranscribe does not listen for a wakeword. This method\nreturns a bi-directional stream, and its intended use is\nfor situations where a user may say anything at all, whether\nit is short or long, and the application wants to save the\ntranscript (e.g., take a note, send a message).\n\u003cbr/\u003e\u003cbr/\u003e\nThe first message sent to the server must be the TranscribeAction,\nwith remaining messages sending audio data.\nMessages received from the server will include the current\nbest partial transcription until the full transcription is\nready. The stream ends when either the client application\ncloses it, a predefined duration of silence (non-speech)\noccurs, or the end-transcription intent is recognized.",
+        "operationId": "InteractService_Transcribe",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/v3TranscribeResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of v3TranscribeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Data to send to the Transcribe stream. The first message on\nthe stream must be a TranscribeAction, followed by audio data. (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3TranscribeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "InteractService"
+        ]
+      }
+    },
+    "/api/diatheke/v3/update-session": {
+      "post": {
+        "summary": "Process input for a session and get an updated session with\na list of actions to take next. This is the only method\nthat modifies the Cobalt Interact session state.",
+        "operationId": "InteractService_UpdateSession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v3UpdateSessionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `UpdateSession` method.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v3UpdateSessionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "InteractService"
+        ]
+      }
+    },
+    "/api/diatheke/v3/version": {
+      "get": {
+        "summary": "Returns version information from the server.",
+        "operationId": "InteractService_Version",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/interactv3VersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "InteractService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "interactv3ListModelsResponse": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/interactv3ModelInfo"
+          }
+        }
+      },
+      "description": "A list of models available on the Cobalt Interact server."
+    },
+    "interactv3ModelInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Cobalt Interact model ID, which is used to create a new session."
+        },
+        "name": {
+          "type": "string",
+          "description": "Pretty model name, which may be used for display purposes."
+        },
+        "language": {
+          "type": "string",
+          "description": "Language code of the model."
+        },
+        "asrSampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The ASR audio sample rate, if ASR is enabled."
+        },
+        "ttsSampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The TTS audio sample rate, if TTS is enabled."
+        }
+      },
+      "description": "Information about a single Cobalt Interact model."
+    },
+    "interactv3VersionResponse": {
+      "type": "object",
+      "properties": {
+        "diatheke": {
+          "type": "string",
+          "title": "Dialog management engine"
+        },
+        "chosun": {
+          "type": "string",
+          "title": "NLU engine"
+        },
+        "cubic": {
+          "type": "string",
+          "title": "ASR engine"
+        },
+        "luna": {
+          "type": "string",
+          "title": "TTS engine"
+        }
+      },
+      "description": "Lists the version of Cobalt Interact and the engines it uses."
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v2Entity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The name of the entity."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the entity based on the input text. Depending on the\nChosun model, this might not be the same as what was given in\nthe input string, especially if a synonym replacement occurred.\nTo find the original value as it was given in the input, use the\nstart and end index of the entity."
+        },
+        "start": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The index in the original text string where the entity value begins."
+        },
+        "end": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The index in the original text string where the entity value ends.\nNote that this index will be one past the last character of the\nentity value."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "confidence is the confidence value between 0 and 1 for the given entity."
+        }
+      },
+      "description": "An entity recognized from the input text."
+    },
+    "v2Intent": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "The domain recognized for the query. If a Chosun model was queried\ndirectly, this will be an empty string."
+        },
+        "id": {
+          "type": "string",
+          "description": "The name of the intent."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number\nrepresents a higher likelihood of the output being\ncorrect."
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2Entity"
+          },
+          "description": "The list of entities recognized with this intent."
+        },
+        "text": {
+          "type": "string",
+          "description": "The text of the query. This is helpful when an n-best list is provided."
+        }
+      },
+      "description": "An intent recognized from the input text."
+    },
+    "v2ParseResponse": {
+      "type": "object",
+      "properties": {
+        "intents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2Intent"
+          },
+          "description": "The list of recognized intents, sorted by confidence."
+        }
+      },
+      "description": "Data returned from the Parse method."
+    },
+    "v3ASRResult": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The transcription."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number\nrepresents a higher likelihood of the output being\ncorrect."
+        },
+        "timedOut": {
+          "type": "boolean",
+          "description": "True if a timeout was defined for the session's current\ninput state in the Cobalt Interact model, and the timeout\nexpired before getting a transcription. This timeout\nrefers to the amount of time a user has to verbally\nrespond to Cobalt Interact after the ASR stream has been\ncreated, and should not be confused with a network\nconnection timeout."
+        },
+        "cubicResult": {
+          "$ref": "#/definitions/v5RecognitionResult",
+          "description": "Cubic recognition result."
+        }
+      },
+      "description": "The result from the ASR stream, sent after the ASR engine\nhas endpointed or the stream was closed by the client."
+    },
+    "v3ActionData": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "$ref": "#/definitions/v3WaitForUserAction",
+          "description": "The user must provide input to Cobalt Interact."
+        },
+        "command": {
+          "$ref": "#/definitions/v3CommandAction",
+          "description": "The client app must execute the specified command."
+        },
+        "reply": {
+          "$ref": "#/definitions/v3ReplyAction",
+          "description": "The client app should provide the reply to the user."
+        },
+        "transcribe": {
+          "$ref": "#/definitions/v3TranscribeAction",
+          "description": "The client app should call the Transcribe method to\ncapture the user's input."
+        }
+      },
+      "description": "Specifies an action that the client application should take."
+    },
+    "v3CommandAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of the command to execute, as defined in the\nCobalt Interact model."
+        },
+        "inputParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "nluResult": {
+          "$ref": "#/definitions/v2ParseResponse",
+          "title": "NLU result"
+        }
+      },
+      "description": "This action indicates that the client application should\nexecute a command."
+    },
+    "v3CommandResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "The command ID, as given by the CommandAction"
+        },
+        "outParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Output from the command expected by the Cobalt Interact model.\nFor example, this could be the result of a data query."
+        },
+        "error": {
+          "type": "string",
+          "description": "If there was an error during execution, indicate it\nhere with a brief message that will be logged by\nCobalt Interact."
+        }
+      },
+      "description": "The result of executing a command."
+    },
+    "v3CreateSessionRequest": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "Specifies the Cobalt Interact model ID to use for the session."
+        },
+        "wakeword": {
+          "type": "string",
+          "description": "Specifies a custom wakeword to use for this session. The\nwakeword must be enabled in the Cobalt Interact model for this\nto have any effect. It will override the default wakeword\nspecified in the model."
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3SessionMetadata",
+          "description": "This is an optional field to provide any metadata associated with the\nsession. The server may record this metadata when processing the\nrequest. The server does not use this field for any other purpose."
+        }
+      },
+      "description": "The top-level message sent by the client for the `CreateSession` method."
+    },
+    "v3CreateSessionResponse": {
+      "type": "object",
+      "properties": {
+        "sessionOutput": {
+          "$ref": "#/definitions/v3SessionOutput"
+        }
+      },
+      "description": "The top-level message sent by the server for the `CreateSession` method."
+    },
+    "v3DeleteSessionRequest": {
+      "type": "object",
+      "properties": {
+        "tokenData": {
+          "$ref": "#/definitions/v3TokenData"
+        }
+      },
+      "description": "The top-level message sent by the client for the `DeleteSession` method."
+    },
+    "v3DeleteSessionResponse": {
+      "type": "object",
+      "description": "The top-level message sent by the server for the `DeleteSession` method."
+    },
+    "v3ReplyAction": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "Text of the reply"
+        },
+        "lunaModel": {
+          "type": "string",
+          "title": "TTS model to use with the TTSReply method"
+        }
+      },
+      "description": "This action indicates that the client application should\ngive the provided text to the user. This action may also\nbe used to synthesize speech with the StreamTTS method."
+    },
+    "v3SessionInput": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "$ref": "#/definitions/v3TokenData",
+          "description": "The session token."
+        },
+        "text": {
+          "$ref": "#/definitions/v3TextInput",
+          "description": "Process the user supplied text."
+        },
+        "asr": {
+          "$ref": "#/definitions/v3ASRResult",
+          "description": "Process an ASR result."
+        },
+        "cmd": {
+          "$ref": "#/definitions/v3CommandResult",
+          "description": "Process the result of a completed command."
+        },
+        "story": {
+          "$ref": "#/definitions/v3SetStory",
+          "description": "Change the current session state."
+        }
+      },
+      "description": "Used by Cobalt Interact to update the session state."
+    },
+    "v3SessionMetadata": {
+      "type": "object",
+      "properties": {
+        "customMetadata": {
+          "type": "string",
+          "description": "Any custom metadata that the client wants to associate with the session.\nThis could be a simple string (e.g. a tracing ID) or structured data\n(e.g. JSON)."
+        },
+        "storageFilePrefix": {
+          "type": "string",
+          "description": "This is an optional field to specify prefix of files that will be\nsaved for this session."
+        }
+      },
+      "description": "Metadata associated with the session."
+    },
+    "v3SessionOutput": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "$ref": "#/definitions/v3TokenData",
+          "description": "The updated session token."
+        },
+        "actionList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v3ActionData"
+          },
+          "description": "The list of actions the client should take next,\nusing the session token returned with this result."
+        }
+      },
+      "description": "The result of updating a session."
+    },
+    "v3SetStory": {
+      "type": "object",
+      "properties": {
+        "storyId": {
+          "type": "string",
+          "description": "The ID of the story to run, as defined in the\nCobalt Interact model."
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "A list of parameters to set before running the given\nstory. This will replace any parameters currently\ndefined in the session."
+        }
+      },
+      "description": "Changes the current state of a Cobalt Interact session to run at\nthe specified story."
+    },
+    "v3StreamASRRequest": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "$ref": "#/definitions/v3TokenData",
+          "description": "Session data, used to determine the correct ASR\nmodel to use, with other contextual information."
+        },
+        "audio": {
+          "type": "string",
+          "format": "byte",
+          "description": "Audio data to transcribe."
+        }
+      },
+      "description": "Data to send to the ASR stream. The first message on the\nstream must be the session token followed by audio data."
+    },
+    "v3StreamASRResponse": {
+      "type": "object",
+      "properties": {
+        "asrResult": {
+          "$ref": "#/definitions/v3ASRResult"
+        }
+      }
+    },
+    "v3StreamASRWithPartialsRequest": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "$ref": "#/definitions/v3TokenData",
+          "description": "Session data, used to determine the correct ASR\nmodel to use, with other contextual information."
+        },
+        "audio": {
+          "type": "string",
+          "format": "byte",
+          "description": "Audio data to transcribe."
+        }
+      },
+      "description": "The top-level messages sent by the client for the `StreamASRWithPartials`\nmethod. In this streaming call, multiple `StreamASRWithPartialsRequest`\nmessages should be sent. The first message must contain a `TokenData`\nmessage only and all subsequent messages must contain audio data only."
+    },
+    "v3StreamASRWithPartialsResponse": {
+      "type": "object",
+      "properties": {
+        "partialResult": {
+          "$ref": "#/definitions/v5RecognitionResult",
+          "description": "An interim partial result, and could change after more audio is processed\nand should not be used to update Cobalt Interact session."
+        },
+        "asrResult": {
+          "$ref": "#/definitions/v3ASRResult",
+          "description": "Final result from ASR engine. This can be use to update Cobalt Interact\nsession via `UpdateSession` method."
+        },
+        "wakewordResult": {
+          "$ref": "#/definitions/v3WakewordResult",
+          "description": "Result of a detected wakeword. This field is only available if alert\nwords are configured on the server, and if the current context requires\nthe presence of a wakeword. If this field is available, it is sent before\nthe final `asr_result` is sent."
+        }
+      },
+      "description": "The top-level messages sent by the server for the `StreamASRWithPartials`\nmethod. This streaming call will return multiple\n`StreamASRWithPartialsResponse` messages. The messages are multiple messages\ncontain partial recognition result from ASR engine and one last message\ncontain an `ASRResult` that be use to update Cobalt Interact session."
+    },
+    "v3StreamTTSRequest": {
+      "type": "object",
+      "properties": {
+        "replyAction": {
+          "$ref": "#/definitions/v3ReplyAction",
+          "description": "Reply action contains reply text and model ID."
+        },
+        "token": {
+          "$ref": "#/definitions/v3TokenData",
+          "description": "Token data to provide session ID and other contextual information."
+        }
+      },
+      "description": "The top-level message sent by the client for the `StreamTTS` method."
+    },
+    "v3StreamTTSResponse": {
+      "type": "object",
+      "properties": {
+        "audio": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "description": "The top-level message sent by the server for the `StreamTTS` method.\nContains synthesized speech audio. The specific encoding\nis defined in the server config file."
+    },
+    "v3TextInput": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      },
+      "description": "User supplied text to send to Cobalt Interact for processing."
+    },
+    "v3TokenData": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "id": {
+          "type": "string",
+          "description": "Session ID, useful for correlating logging between a\nclient and the server."
+        },
+        "metadata": {
+          "type": "string",
+          "description": "Additional data supplied by the client app, which will\nbe logged with other session info by the server."
+        }
+      },
+      "description": "A token that represents a single Cobalt Interact session and its\ncurrent state."
+    },
+    "v3TranscribeAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of the transcribe action, which is useful to\ndifferentiate separate transcription tasks within a\nsingle sesssion."
+        },
+        "cubicModelId": {
+          "type": "string",
+          "description": "(Required) The ASR model to use for transcription."
+        },
+        "diathekeModelId": {
+          "type": "string",
+          "description": "(Optional) A Cobalt Interact model to use for end-of-stream\nconditions. If empty, the server will not be able to\nautomatically close the transcribe stream based on\nconditions defined in the model, such as\na non-speech timeout or an \"end-transcription\" intent.\nWhen empty, the stream must be closed by the client\napplication."
+        }
+      },
+      "description": "This action indicates that the client application should\ncall the Transcribe method to capture the user's input."
+    },
+    "v3TranscribeRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/v3TranscribeAction",
+          "description": "Action defining the transcribe configuration."
+        },
+        "audio": {
+          "type": "string",
+          "format": "byte",
+          "description": "Audio data to transcribe."
+        }
+      },
+      "description": "Data to send to the Transcribe stream. The first message on\nthe stream must be a TranscribeAction, followed by audio data."
+    },
+    "v3TranscribeResponse": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The transcription."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number\nrepresents a higher likelihood that the transcription\nis correct."
+        },
+        "isPartial": {
+          "type": "boolean",
+          "description": "True if this is a partial result, in which case the\nnext result will be for the same audio, either repeating\nor correcting the text in this result. When false, this\nrepresents the final transcription for an utterance, which\nwill not change with further audio input. It is sent when\nthe ASR has identified an endpoint. After the final\ntranscription is sent, any additional results sent on the\nTranscribe stream belong to the next utterance."
+        },
+        "cubicResult": {
+          "$ref": "#/definitions/v5RecognitionResult",
+          "description": "Cubic recognition result."
+        }
+      },
+      "description": "The result from the Transcribe stream. Usually, several partial\n(or intermediate) transcriptions will be sent until the final\ntranscription is ready for every utterance processed."
+    },
+    "v3UpdateSessionRequest": {
+      "type": "object",
+      "properties": {
+        "sessionInput": {
+          "$ref": "#/definitions/v3SessionInput"
+        }
+      },
+      "description": "The top-level message sent by the client for the `UpdateSession` method."
+    },
+    "v3UpdateSessionResponse": {
+      "type": "object",
+      "properties": {
+        "sessionOutput": {
+          "$ref": "#/definitions/v3SessionOutput"
+        }
+      },
+      "description": "The top-level message sent by the server for the `UpdateSession` method."
+    },
+    "v3WaitForUserAction": {
+      "type": "object",
+      "properties": {
+        "requiresWakeWord": {
+          "type": "boolean",
+          "description": "True if the next user input must begin with a wake-word."
+        },
+        "immediate": {
+          "type": "boolean",
+          "description": "True if the input is required immediately (i.e., in\nresponse to a question Cobalt Interact asked the user). When\nfalse, the client should be allowed to wait indefinitely\nfor the user to provide input."
+        }
+      },
+      "description": "This action indicates that Cobalt Interact is expecting user input."
+    },
+    "v3WakewordResult": {
+      "type": "object",
+      "properties": {
+        "timestampMs": {
+          "type": "string",
+          "format": "uint64",
+          "title": "The end-timestamp of the detected wakeword in milliseconds"
+        }
+      },
+      "description": "The result from the ASR stream, sent when a wakeword has been detected in the\nstream."
+    },
+    "v5ConfusionNetworkArc": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "title": "Word in the recognized transcript"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood that the word was correctly recognized."
+        },
+        "features": {
+          "$ref": "#/definitions/v5ConfusionNetworkArcFeatures",
+          "title": "Features related to this arc"
+        }
+      },
+      "title": "An Arc inside a Confusion Network Link"
+    },
+    "v5ConfusionNetworkArcFeatures": {
+      "type": "object",
+      "properties": {
+        "confidence": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": "A map of features that are used for recalculating confidence scores of this\nconfusion network arc"
+        }
+      },
+      "title": "Features related to confusion network arcs"
+    },
+    "v5ConfusionNetworkLink": {
+      "type": "object",
+      "properties": {
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "title": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this link"
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "title": "Duration in milliseconds of the current link in the confusion network"
+        },
+        "arcs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5ConfusionNetworkArc"
+          },
+          "title": "Arcs between this link"
+        }
+      },
+      "title": "A Link inside a confusion network"
+    },
+    "v5RecognitionAlternative": {
+      "type": "object",
+      "properties": {
+        "transcriptFormatted": {
+          "type": "string",
+          "description": "Text representing the transcription of the words that the user spoke.\n\nThe transcript will be formatted according to the servers formatting\nconfiguration. If you want the raw transcript, please see the field\n`transcript_raw`. If the server is configured to not use any formatting,\nthen this field will contain the raw transcript.\n\nAs an example, if the spoken utterance was \"four people\", and the server\nwas configured to format numbers, this field would be set to \"4 people\"."
+        },
+        "transcriptRaw": {
+          "type": "string",
+          "description": "Text representing the transcription of the words that the user spoke,\nwithout any formatting applied. If you want the formatted transcript,\nplease see the field `transcript_formatted`.\n\nAs an example, if the spoken utterance was `four people`, this field would\nbe set to \"FOUR PEOPLE\"."
+        },
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this utterance."
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Duration in milliseconds of the current utterance in the spoken audio."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood of the output being correct."
+        },
+        "wordDetails": {
+          "$ref": "#/definitions/v5WordDetails",
+          "description": "Word-level details corresponding to the transcripts. This is available only\nif `enable_word_details` was set to `true` in the `RecognitionConfig`."
+        }
+      },
+      "title": "A recognition hypothesis"
+    },
+    "v5RecognitionConfusionNetwork": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5ConfusionNetworkLink"
+          }
+        }
+      },
+      "title": "Confusion network in recognition output"
+    },
+    "v5RecognitionResult": {
+      "type": "object",
+      "properties": {
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5RecognitionAlternative"
+          },
+          "title": "An n-best list of recognition hypotheses alternatives"
+        },
+        "isPartial": {
+          "type": "boolean",
+          "description": "If this is set to true, it denotes that the result is an interim partial\nresult, and could change after more audio is processed. If unset, or set to\nfalse, it denotes that this is a final result and will not change.\n\nServers are not required to implement support for returning partial\nresults, and clients should generally not depend on their availability."
+        },
+        "cnet": {
+          "$ref": "#/definitions/v5RecognitionConfusionNetwork",
+          "description": "If `enable_confusion_network` was set to true in the `RecognitionConfig`,\nand if the model supports it, a confusion network will be available in the\nresults."
+        },
+        "audioChannel": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Channel of the audio file that this result was transcribed from. Channels\nare 0-indexed, so the for mono audio data, this value will always be 0."
+        }
+      },
+      "description": "A recognition result corresponding to a portion of audio."
+    },
+    "v5WordDetails": {
+      "type": "object",
+      "properties": {
+        "formatted": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5WordInfo"
+          },
+          "description": "Word-level information corresponding to the `transcript_formatted` field."
+        },
+        "raw": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5WordInfo"
+          },
+          "description": "Word-level information corresponding to the `transcript_raw` field."
+        }
+      }
+    },
+    "v5WordInfo": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "title": "The actual word in the text"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood that the word was correctly recognized."
+        },
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this spoken word."
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Duration in milliseconds of the current word in the spoken audio."
+        }
+      },
+      "title": "Word level details for recognized words in a transcript"
+    }
+  }
+}

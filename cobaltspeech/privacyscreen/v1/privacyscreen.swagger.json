@@ -1,0 +1,628 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "cobaltspeech/privacyscreen/v1/privacyscreen.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "PrivacyScreenService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/privacyscreen/v1/list-models": {
+      "get": {
+        "summary": "ListModels returns information about the models the server can access.",
+        "operationId": "PrivacyScreenService_ListModels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1ListModelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "PrivacyScreenService"
+        ]
+      }
+    },
+    "/api/privacyscreen/v1/redact-text": {
+      "post": {
+        "summary": "Redact text using a redaction engine that is configured with the provided\nredaction configuration.",
+        "operationId": "PrivacyScreenService_RedactText",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RedactTextResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level messages sent by the client for the `RedactText`\nmethod. Contains redaction config and text to redact.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1RedactTextRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PrivacyScreenService"
+        ]
+      }
+    },
+    "/api/privacyscreen/v1/redact-transcript": {
+      "post": {
+        "summary": "redacts transcript using a redaction engine that is configured with the\nprovided redaction configuration.",
+        "operationId": "PrivacyScreenService_RedactTranscript",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1RedactTranscriptResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level messages sent by the client for the `RedactTranscript`\nmethod. Contains redaction config and a transcription to redact.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1RedactTranscriptRequest"
+            }
+          }
+        ],
+        "tags": [
+          "PrivacyScreenService"
+        ]
+      }
+    },
+    "/api/privacyscreen/v1/streaming-redact-transcribed-audio": {
+      "get": {
+        "summary": "Performs bidirectional streaming redaction on transcribed audio. Receive\nredacted audio while sending audio. The transcription of audio data must be\nready before sending the audio.",
+        "operationId": "PrivacyScreenService_StreamingRedactTranscribedAudio",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/v1StreamingRedactTranscribedAudioResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of v1StreamingRedactTranscribedAudioResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "config.redactionConfig.modelId",
+            "description": "Unique identifier of the model to use, as obtained from a `ModelInfo`\nmessage.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "config.redactionConfig.redactionClasses",
+            "description": "List of whitelisted redaction classes. If the list is empty, server default\nredaction class list will be considered.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "config.redactionConfig.disableStreaming",
+            "description": "This is an optional field. If this is set to `true`, Cobalt Privacy Screen\nwill redact entire transcript at once, by doing so, redaction accuracy will\nincrease at the cost of higher latency. If set to `false`, Cobalt Privacy\nScreen will redact one utterance at a time and return the result as soon as\npossible. The default is `false`.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "audio",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "PrivacyScreenService"
+        ]
+      }
+    },
+    "/api/privacyscreen/v1/streaming-transcribe-and-redact": {
+      "get": {
+        "summary": "Performs bidirectional streaming speech recognition and redaction. Receive\nredacted audio and transcriptions while sending audio.",
+        "operationId": "PrivacyScreenService_StreamingTranscribeAndRedact",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/v1StreamingTranscribeAndRedactResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of v1StreamingTranscribeAndRedactResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "config.redactionConfig.modelId",
+            "description": "Unique identifier of the model to use, as obtained from a `ModelInfo`\nmessage.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "config.redactionConfig.redactionClasses",
+            "description": "List of whitelisted redaction classes. If the list is empty, server default\nredaction class list will be considered.",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "config.redactionConfig.disableStreaming",
+            "description": "This is an optional field. If this is set to `true`, Cobalt Privacy Screen\nwill redact entire transcript at once, by doing so, redaction accuracy will\nincrease at the cost of higher latency. If set to `false`, Cobalt Privacy\nScreen will redact one utterance at a time and return the result as soon as\npossible. The default is `false`.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "config.enableUnredactedTranscript",
+            "description": "This is an optional field. If this is set to `true`, each utterance result\nwill include unredacted utterance. If set to `false`, no unredacted\nutterance will be returned. The default is `false`.",
+            "in": "query",
+            "required": false,
+            "type": "boolean"
+          },
+          {
+            "name": "audio",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          }
+        ],
+        "tags": [
+          "PrivacyScreenService"
+        ]
+      }
+    },
+    "/api/privacyscreen/v1/version": {
+      "get": {
+        "summary": "Returns version information from the server.",
+        "operationId": "PrivacyScreenService_Version",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1VersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "PrivacyScreenService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1CustomClass": {
+      "type": "object",
+      "properties": {
+        "redactionClass": {
+          "type": "string",
+          "description": "This is name of the new redaction class. For example, this could be\n\"COMPANY_NAME\"."
+        },
+        "pattern": {
+          "type": "string",
+          "description": "Pattern defines a Python regex expression that would be used to identify\ntokens in text that get redacted to this new redaction class. For example,\n\"COBALT|GOOGLE|MICROSOFT\", or more complex patterns such as\n\"^COMPANY-[\\d]{4}$\"."
+        }
+      },
+      "description": "CustomClass allows the client to define a new redaction class. Patterns\ndefined here will override default redaction class for matching tokens."
+    },
+    "v1ListModelsResponse": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ModelInfo"
+          },
+          "description": "List of models available for use on Privacy Screen server."
+        }
+      },
+      "description": "The message returned to the client by the `ListModels` method."
+    },
+    "v1ModelInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the model. This identifier is used to choose the model\nthat should be used for recognition, and is specified in the\n`RedactionConfig` message."
+        },
+        "name": {
+          "type": "string",
+          "description": "Model name. This is a concise name describing the model, and may be\npresented to the end-user, for example, to help choose which model to use\nfor their recognition task."
+        },
+        "redactionClasses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of supported redaction classes."
+        }
+      },
+      "title": "Description of a Cobalt Privacy Screen Model"
+    },
+    "v1RedactTextRequest": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1RedactionConfig",
+          "title": "redaction config"
+        },
+        "text": {
+          "type": "string",
+          "title": "text to redact"
+        }
+      },
+      "description": "The top-level messages sent by the client for the `RedactText`\nmethod. Contains redaction config and text to redact."
+    },
+    "v1RedactTextResponse": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Full redacted text."
+        },
+        "redactedTokens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1RedactedToken"
+          },
+          "description": "A list contains redacted tokens corresponding to the full text."
+        }
+      },
+      "description": "The top-level message sent by the server for the `RedactText`\nmethod."
+    },
+    "v1RedactTranscribedAudioConfig": {
+      "type": "object",
+      "properties": {
+        "redactionConfig": {
+          "$ref": "#/definitions/v1RedactionConfig",
+          "description": "Text redaction config."
+        },
+        "transcript": {
+          "$ref": "#/definitions/v1Transcript",
+          "description": "Transcription of the entire audio. This must be ready before sending the\naudio."
+        }
+      },
+      "description": "Configuration for setting up a `StreamingRedactTranscribedAudio` method."
+    },
+    "v1RedactTranscriptRequest": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v1RedactionConfig",
+          "title": "redaction config"
+        },
+        "transcript": {
+          "$ref": "#/definitions/v1Transcript",
+          "title": "transcription to redact"
+        }
+      },
+      "description": "The top-level messages sent by the client for the `RedactTranscript`\nmethod. Contains redaction config and a transcription to redact."
+    },
+    "v1RedactTranscriptResponse": {
+      "type": "object",
+      "properties": {
+        "transcript": {
+          "$ref": "#/definitions/v1Transcript"
+        }
+      },
+      "description": "The top-level message sent by the server for the `RedactTranscript`\nmethod. Contains redacted transcript."
+    },
+    "v1RedactedToken": {
+      "type": "object",
+      "properties": {
+        "originalText": {
+          "type": "string",
+          "description": "The original text for the current redacted token."
+        },
+        "originalOffset": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Start offset of the original text in the input string."
+        },
+        "originalLength": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Length of the original text."
+        },
+        "redactionClass": {
+          "type": "string",
+          "description": "Recognized redaction class."
+        },
+        "redactionConfidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Redaction confidence estimate between 0 and 1. A higher number represents\na higher likelihood that the word was correctly recognized."
+        }
+      },
+      "description": "RedactedToken represents each recognized sensitive information to be redacted\nand related information."
+    },
+    "v1RedactionConfig": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "Unique identifier of the model to use, as obtained from a `ModelInfo`\nmessage."
+        },
+        "redactionClasses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of whitelisted redaction classes. If the list is empty, server default\nredaction class list will be considered."
+        },
+        "disableStreaming": {
+          "type": "boolean",
+          "description": "This is an optional field. If this is set to `true`, Cobalt Privacy Screen\nwill redact entire transcript at once, by doing so, redaction accuracy will\nincrease at the cost of higher latency. If set to `false`, Cobalt Privacy\nScreen will redact one utterance at a time and return the result as soon as\npossible. The default is `false`."
+        },
+        "customClasses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1CustomClass"
+          },
+          "description": "This is an optional field. If set, then provided list will be used to\nextend the list of redaction classes."
+        }
+      },
+      "description": "Configuration for setting up a redaction engine."
+    },
+    "v1StreamingRedactTranscribedAudioResponse": {
+      "type": "object",
+      "properties": {
+        "utterance": {
+          "$ref": "#/definitions/v1Utterance"
+        },
+        "audio": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "description": "The top-level message sent by the server for the\n`StreamingRedactTranscribedAudio` method. In this streaming call, multiple\n`StreamingRedactTranscribedAudioResponse` messages contain either `Utterance`\nor redacted audio data will be returned."
+    },
+    "v1StreamingTranscribeAndRedactResponse": {
+      "type": "object",
+      "properties": {
+        "utterance": {
+          "$ref": "#/definitions/v1TranscribeAndRedactUtterance"
+        },
+        "audio": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "description": "The top-level message sent by the server for the\n`StreamingTranscribeAndRedact` method. In this streaming call, multiple\n`StreamingTranscribeAndRedactResponse` messages contain either\n`TranscribeAndRedactUtterance` or redacted audio data will be returned."
+    },
+    "v1TranscribeAndRedactConfig": {
+      "type": "object",
+      "properties": {
+        "redactionConfig": {
+          "$ref": "#/definitions/v1RedactionConfig",
+          "description": "Text redaction config."
+        },
+        "enableUnredactedTranscript": {
+          "type": "boolean",
+          "description": "This is an optional field. If this is set to `true`, each utterance result\nwill include unredacted utterance. If set to `false`, no unredacted\nutterance will be returned. The default is `false`."
+        }
+      },
+      "description": "Configuration for setting up a `StreamingTranscribeAndRedact` method."
+    },
+    "v1TranscribeAndRedactUtterance": {
+      "type": "object",
+      "properties": {
+        "redacted": {
+          "$ref": "#/definitions/v1Utterance",
+          "description": "Redacted utterance."
+        },
+        "unredacted": {
+          "$ref": "#/definitions/v1Utterance",
+          "description": "Unredacted utterance. This is available only if\n`enable_unredacted_transcript` was set to `true` in the\n`TranscribeAndRedactConfig`."
+        }
+      },
+      "description": "Output utterance from `StreamingTranscribeAndRedact` method."
+    },
+    "v1Transcript": {
+      "type": "object",
+      "properties": {
+        "utterances": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Utterance"
+          }
+        }
+      },
+      "description": "Transcript contains multiple utterance of the audio."
+    },
+    "v1Utterance": {
+      "type": "object",
+      "properties": {
+        "audioChannel": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Channel of the audio file associate with this utterance. Channels\nare 0-indexed, so the for mono audio data, this value will always be 0."
+        },
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Time offset in milliseconds relative to the beginning of audio\ncorresponding to the start of this utterance."
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Duration in milliseconds of the current utterance in the audio."
+        },
+        "asrConfidence": {
+          "type": "number",
+          "format": "double",
+          "description": "ASR confidence estimate between 0 and 1. A higher number represents a\nhigher likelihood of the output being correct. This remains the same\nvalue for pretranscribed input."
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Word"
+          },
+          "description": "Words corresponding to the utterance. This field contains word-level\ntimestamps, which are essential input for audio redaction."
+        }
+      },
+      "title": "Utterance of the audio"
+    },
+    "v1VersionResponse": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Version of the server handling these requests."
+        }
+      },
+      "description": "The top-level message sent by the server for the `Version` method."
+    },
+    "v1Word": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The actual word corresponding to the utterance."
+        },
+        "asrConfidence": {
+          "type": "number",
+          "format": "double",
+          "description": "ASR confidence estimate between 0 and 1. A higher number represents a\nhigher likelihood that the word was correctly recognized. This remains\nthe same value for pretranscribed input."
+        },
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this spoken word."
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Duration in milliseconds of the current word in the spoken audio."
+        },
+        "isRedacted": {
+          "type": "boolean",
+          "description": "If this is set to true, it denotes that the curent word is redacted word\nor an original word of a redacted word."
+        },
+        "redactionClass": {
+          "type": "string",
+          "description": "Recognized redaction class. This is available only if the current word\nis a redacted word."
+        },
+        "redactionConfidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Redaction confidence estimate between 0 and 1. A higher number represents\na higher likelihood that the word was correctly recognized. This is\navailable only if the current word is a redacted word."
+        }
+      },
+      "description": "Word represents a token in a utterance."
+    }
+  }
+}

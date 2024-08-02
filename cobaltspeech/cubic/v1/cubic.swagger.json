@@ -1,0 +1,624 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "cobaltspeech/cubic/v1/cubic.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Cubic"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/cubic/v1/compile-context": {
+      "post": {
+        "summary": "Compiles recognition context information, such as a specialized list of\nwords or phrases, into a compact, efficient form to send with subsequent\n`Recognize` or `StreamingRecognize` requests to customize speech\nrecognition. For example, a list of contact names may be compiled in a\nmobile app and sent with each recognition request so that the app user's\ncontact names are more likely to be recognized than arbitrary names. This\npre-compilation ensures that there is no added latency for the recognition\nrequest. It is important to note that in order to compile context for a\nmodel, that model has to support context in the first place, which can be\nverified by checking its `ModelAttributes.ContextInfo` obtained via the\n`ListModels` method. Also, the compiled data will be model specific; that\nis, the data compiled for one model will generally not be usable with a\ndifferent model.",
+        "operationId": "Cubic_CompileContext",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cubicCompileContextResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `CompileContext` request. It\ncontains a list of phrases or words, paired with a context token included in\nthe model being used. The token specifies a category such as \"menu_item\",\n\"airport\", \"contact\", \"product_name\" etc. The context token is used to\ndetermine the places in the recognition output where the provided list of\nphrases or words may appear. The allowed context tokens for a given model can\nbe found in its `ModelAttributes.ContextInfo` obtained via the `ListModels`\nmethod.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cubicCompileContextRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Cubic"
+        ]
+      }
+    },
+    "/api/cubic/v1/list-models": {
+      "get": {
+        "summary": "Retrieves a list of available speech recognition models",
+        "operationId": "Cubic_ListModels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cubicListModelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Cubic"
+        ]
+      }
+    },
+    "/api/cubic/v1/recognize": {
+      "post": {
+        "summary": "Performs synchronous speech recognition: receive results after all audio\nhas been sent and processed.  It is expected that this request be typically\nused for short audio content: less than a minute long.  For longer content,\nthe `StreamingRecognize` method should be preferred.",
+        "operationId": "Cubic_Recognize",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cubicRecognitionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `Recognize` method.  Both\nthe `RecognitionConfig` and `RecognitionAudio` fields are required.  The\nentire audio data must be sent in one request.  If your audio data is larger,\nplease use the `StreamingRecognize` call..",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cubicRecognizeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Cubic"
+        ]
+      }
+    },
+    "/api/cubic/v1/streaming-recognize": {
+      "post": {
+        "summary": "Performs bidirectional streaming speech recognition.  Receive results while\nsending audio.  This method is only available via GRPC and not via\nHTTP+JSON. However, a web browser may use websockets to use this service.",
+        "operationId": "Cubic_StreamingRecognize",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/cubicRecognitionResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of cubicRecognitionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `StreamingRecognize`\nrequest.  Multiple `StreamingRecognizeRequest` messages are sent. The first\nmessage must contain a `RecognitionConfig` message only, and all subsequent\nmessages must contain `RecognitionAudio` only.  All `RecognitionAudio`\nmessages must contain non-empty audio.  If audio content is empty, the server\nmay interpret it as end of stream and stop accepting any further messages. (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/cubicStreamingRecognizeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Cubic"
+        ]
+      }
+    },
+    "/api/cubic/v1/version": {
+      "get": {
+        "summary": "Queries the Version of the Server",
+        "operationId": "Cubic_Version",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cubicVersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "Cubic"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "RecognitionConfigEncoding": {
+      "type": "string",
+      "enum": [
+        "RAW_LINEAR16",
+        "WAV",
+        "MP3",
+        "FLAC",
+        "VOX8000",
+        "ULAW8000",
+        "ALAW8000",
+        "OPUS"
+      ],
+      "default": "RAW_LINEAR16",
+      "description": "The encoding of the audio data to be sent for recognition.\n\nFor best results, the audio source should be captured and transmitted using\nthe RAW_LINEAR16 encoding.\n\n - RAW_LINEAR16: Raw (headerless) Uncompressed 16-bit signed little endian samples (linear\nPCM), single channel, sampled at the rate expected by the chosen `Model`.\n - WAV: WAV (data with RIFF headers), with data sampled at a rate equal to or\nhigher than the sample rate expected by the chosen Model.\n - MP3: MP3 data, sampled at a rate equal to or higher than the sampling rate\nexpected by the chosen Model.\n - FLAC: FLAC data, sampled at a rate equal to or higher than the sample rate\nexpected by the chosen Model.\n - VOX8000: VOX data (Dialogic ADPCM), sampled at 8 KHz.\n - ULAW8000: μ-law (8-bit) encoded RAW data, single channel, sampled at 8 KHz.\n - ALAW8000: A-law (8-bit) encoded RAW data, single channel, sampled at 8 KHz.\n - OPUS: Opus (16-bit) encoded RAW data, sampled at a rate equal to or higher than\nthe sample rate expected by the chosen Model."
+    },
+    "cubicCompileContextRequest": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "Unique identifier of the model to compile the context information for. The\nmodel chosen needs to support context which can be verified by checking its\n`ModelAttributes.ContextInfo` obtained via `ListModels`."
+        },
+        "token": {
+          "type": "string",
+          "description": "The token that is associated with the provided list of phrases or words\n(e.g \"menu_item\", \"airport\" etc.). Must be one of the tokens included in\nthe model being used, which can be retrieved by calling the `ListModels`\nmethod."
+        },
+        "phrases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cubicContextPhrase"
+          },
+          "description": "List of phrases and/or words to be compiled."
+        }
+      },
+      "description": "The top-level message sent by the client for the `CompileContext` request. It\ncontains a list of phrases or words, paired with a context token included in\nthe model being used. The token specifies a category such as \"menu_item\",\n\"airport\", \"contact\", \"product_name\" etc. The context token is used to\ndetermine the places in the recognition output where the provided list of\nphrases or words may appear. The allowed context tokens for a given model can\nbe found in its `ModelAttributes.ContextInfo` obtained via the `ListModels`\nmethod."
+    },
+    "cubicCompileContextResponse": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "$ref": "#/definitions/cubicCompiledContext",
+          "description": "Context information in a compact form that is efficient for use in\nsubsequent recognition requests. The size of the compiled form will depend\non the amount of text that was sent for compilation. For 1000 words it's\ngenerally less than 100 kilobytes."
+        }
+      },
+      "description": "The message returned to the client by the `CompileContext` method."
+    },
+    "cubicCompiledContext": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte",
+          "description": "The context information compiled by the `CompileContext` method."
+        }
+      },
+      "description": "Context information in a compact form that is efficient for use in subsequent\nrecognition requests. The size of the compiled form will depend on the amount\nof text that was sent for compilation. For 1000 words it's generally less\nthan 100 kilobytes."
+    },
+    "cubicConfusionNetworkArc": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "title": "Word in the recognized transcript"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1.  A higher number represents a higher\nlikelihood that the word was correctly recognized."
+        }
+      },
+      "title": "An Arc inside a Confusion Network Link"
+    },
+    "cubicConfusionNetworkLink": {
+      "type": "object",
+      "properties": {
+        "startTime": {
+          "type": "string",
+          "title": "Time offset relative to the beginning of audio received by the recognizer\nand corresponding to the start of this link"
+        },
+        "duration": {
+          "type": "string",
+          "title": "Duration of the current link in the confusion network"
+        },
+        "arcs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cubicConfusionNetworkArc"
+          },
+          "title": "Arcs between this link"
+        }
+      },
+      "title": "A Link inside a confusion network"
+    },
+    "cubicContextInfo": {
+      "type": "object",
+      "properties": {
+        "supportsContext": {
+          "type": "boolean",
+          "description": "If this is set to true, the model supports taking context information into\naccount to aid speech recognition. The information may be sent with with\nrecognition requests via RecognitionContext inside RecognitionConfig."
+        },
+        "allowedContextTokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of tokens (e.g \"name\", \"airport\" etc.) that serve has placeholders\nin the model where a client provided list of phrases or words may be used\nto aid speech recognition and produce the exact desired recognition output."
+        }
+      },
+      "description": "Model information specifc to supporting recognition context."
+    },
+    "cubicContextPhrase": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The actual phrase or word."
+        },
+        "boost": {
+          "type": "number",
+          "format": "float",
+          "description": "This is an optional field. The boost value is a positive number which is\nused to increase the probability of the phrase or word appearing in the\noutput. This setting can be used to differentiate between similar sounding\nwords, with the desired word given a bigger boost value.\n\nBy default, all phrases or words are given an equal probability of 1/N\n(where N = total number of phrases or words). If a boost value is provided,\nthe new probability is (boost + 1) * 1/N. We normalize the boosted\nprobabilities for all the phrases or words so that they sum to one. This\nmeans that the boost value only has an effect if there are relative\ndifferences in the values for different phrases or words. That is, if all\nphrases or words have the same boost value, after normalization they will\nall still have the same probability. This also means that the boost value\ncan be any positive value, but it is best to stick between 0 to 20.\n\nNegative values are not supported and will be treated as 0 values."
+        }
+      },
+      "description": "A phrase or word that is to be compiled into context information that can be\nlater used to improve speech recognition during a `Recognize` or\n`StreamingRecognize` call. Along with the phrase or word itself, there is an\noptional boost parameter that can be used to boost the likelihood of the\nphrase or word in the recognition output."
+    },
+    "cubicListModelsResponse": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cubicModel"
+          },
+          "description": "List of models available for use that match the request."
+        }
+      },
+      "description": "The message returned to the client by the `ListModels` method."
+    },
+    "cubicModel": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the model.  This identifier is used to choose the\nmodel that should be used for recognition, and is specified in the\n`RecognitionConfig` message."
+        },
+        "name": {
+          "type": "string",
+          "description": "Model name.  This is a concise name describing the model, and maybe\npresented to the end-user, for example, to help choose which model to use\nfor their recognition task."
+        },
+        "attributes": {
+          "$ref": "#/definitions/cubicModelAttributes",
+          "title": "Model attributes"
+        }
+      },
+      "title": "Description of a Cubic Model"
+    },
+    "cubicModelAttributes": {
+      "type": "object",
+      "properties": {
+        "sampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "title": "Audio sample rate supported by the model"
+        },
+        "contextInfo": {
+          "$ref": "#/definitions/cubicContextInfo",
+          "description": "Attributes specifc to supporting recognition context."
+        }
+      },
+      "title": "Attributes of a Cubic Model"
+    },
+    "cubicRecognitionAlternative": {
+      "type": "object",
+      "properties": {
+        "transcript": {
+          "type": "string",
+          "description": "Text representing the transcription of the words that the user spoke.\n\nThe transcript will be formatted according to the servers formatting\nconfiguration. If you want the raw transcript, please see the field\n`raw_transcript`.  If the server is configured to not use any formatting,\nthen this field will contain the raw transcript.\n\nAs an example, if the spoken utterance was \"four people\", and the\nserver was configured to format numbers, this field would be set to\n\"4 people\"."
+        },
+        "rawTranscript": {
+          "type": "string",
+          "description": "Text representing the transcription of the words that the user spoke,\nwithout any formatting.  This field will be populated only the config\n`RecognitionConfig.enable_raw_transcript` is set to true. Otherwise this\nfield will be an empty string. If you want the formatted transcript, please\nsee the field `transcript`.\n\nAs an example, if the spoken utterance was `here are four words`,\nthis field would be set to \"HERE ARE FOUR WORDS\"."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood of the output being correct."
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cubicWordInfo"
+          },
+          "description": "A list of word-specific information for each recognized word in the\n`transcript` field. This is available only if `enable_word_confidence` or\n`enable_word_time_offsets` was set to `true` in the `RecognitionConfig`."
+        },
+        "rawWords": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cubicWordInfo"
+          },
+          "description": "A list of word-specific information for each recognized word in the\n`raw_transcript` field. This is available only if `enable_word_confidence`\nor `enable_word_time_offsets` was set to `true` _and_\n`enable_raw_transcript` is also set to `true` in the `RecognitionConfig`."
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Time offset relative to the beginning of audio received by the recognizer\nand corresponding to the start of this utterance."
+        },
+        "duration": {
+          "type": "string",
+          "description": "Duration of the current utterance in the spoken audio."
+        }
+      },
+      "title": "A recognition hypothesis"
+    },
+    "cubicRecognitionAudio": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "title": "Audio to be sent to the recognizer"
+    },
+    "cubicRecognitionConfig": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "Unique identifier of the model to use, as obtained from a `Model` message."
+        },
+        "audioEncoding": {
+          "$ref": "#/definitions/RecognitionConfigEncoding",
+          "description": "Encoding of audio data sent/streamed through the `RecognitionAudio`\nmessages.  For encodings like WAV/MP3 that have headers, the headers are\nexpected to be sent at the beginning of the stream, not in every\n`RecognitionAudio` message.\n\nIf not specified, the default encoding is RAW_LINEAR16.\n\nDepending on how they are configured, server instances of this service may\nnot support all the encodings enumerated above. They are always required to\naccept RAW_LINEAR16.  If any other `Encoding` is specified, and it is not\navailable on the server being used, the recognition request will result in\nan appropriate error message."
+        },
+        "idleTimeout": {
+          "type": "string",
+          "description": "Idle Timeout of the created Recognizer.  If no audio data is received by\nthe recognizer for this duration, ongoing rpc calls will result in an\nerror, the recognizer will be destroyed and thus more audio may not be sent\nto the same recognizer.  The server may impose a limit on the maximum idle\ntimeout that can be specified, and if the value in this message exceeds\nthat serverside value, creating of the recognizer will fail with an error."
+        },
+        "enableWordTimeOffsets": {
+          "type": "boolean",
+          "description": "This is an optional field.  If this is set to true, each result will\ninclude a list of words and the start time offset (timestamp) and the\nduration for each of those words.  If set to `false`, no word-level\ntimestamps will be returned.  The default is `false`."
+        },
+        "enableWordConfidence": {
+          "type": "boolean",
+          "description": "This is an optional field.  If this is set to true, each result will\ninclude a list of words and the confidence for those words.  If `false`, no\nword-level confidence information is returned.  The default is `false`."
+        },
+        "enableRawTranscript": {
+          "type": "boolean",
+          "description": "This is an optional field.  If this is set to true, the field\n`RecognitionAlternative.raw_transcript` will be populated with the raw\ntranscripts output from the recognizer will be exposed without any\nformatting rules applied.  If this is set to false, that field will not\nbe set in the results.  The RecognitionAlternative.transcript will\nalways be populated with text formatted according to the server's settings."
+        },
+        "enableConfusionNetwork": {
+          "type": "boolean",
+          "description": "This is an optional field.  If this is set to true, the results will\ninclude a confusion network.  If set to `false`, no confusion network will\nbe returned.  The default is `false`.  If the model being used does not\nsupport a confusion network, results may be returned without a confusion\nnetwork available.  If this field is set to `true`, then\n`enable_raw_transcript` is also forced to be true."
+        },
+        "audioChannels": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "description": "This is an optional field.  If the audio has multiple channels, this field\nshould be configured with the list of channel indices that should be\ntranscribed.  Channels are 0-indexed.\n\nExample: `[0]` for a mono file, `[0, 1]` for a stereo file.\n\nIf this field is not set, a mono file will be assumed by default and only\nchannel-0 will be transcribed even if the file actually has additional\nchannels.\n\nChannels that are present in the audio may be omitted, but it is an error\nto include a channel index in this field that is not present in the audio.\nChannels may be listed in any order but the same index may not be repeated\nin this list.\n\nBAD: `[0, 2]` for a stereo file; BAD: `[0, 0]` for a mono file."
+        },
+        "metadata": {
+          "$ref": "#/definitions/cubicRecognitionMetadata",
+          "description": "This is an optional field.  If there is any metadata associated with the\naudio being sent, use this field to provide it to cubic.  The server may\nrecord this metadata when processing the request.  The server does not use\nthis field for any other purpose."
+        },
+        "context": {
+          "$ref": "#/definitions/cubicRecognitionContext",
+          "description": "This is an optional field for providing any additional context information\nthat may aid speech recognition.  This can also be used to add\nout-of-vocabulary words to the model or boost recognition of specific\nproper names or commands. Context information must be pre-compiled via the\n`CompileContext()` method."
+        }
+      },
+      "title": "Configuration for setting up a Recognizer"
+    },
+    "cubicRecognitionConfusionNetwork": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cubicConfusionNetworkLink"
+          }
+        }
+      },
+      "title": "Confusion network in recognition output"
+    },
+    "cubicRecognitionContext": {
+      "type": "object",
+      "properties": {
+        "compiled": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cubicCompiledContext"
+          },
+          "description": "List of compiled context information, with each entry being compiled from a\nlist of words or phrases using the `CompileContext` method."
+        }
+      },
+      "description": "A collection of additional context information that may aid speech\nrecognition.  This can be used to add out-of-vocabulary words to\nthe model or to boost recognition of specific proper names or commands."
+    },
+    "cubicRecognitionMetadata": {
+      "type": "object",
+      "properties": {
+        "customMetadata": {
+          "type": "string",
+          "title": "Any custom metadata that the client wants to associate with the recording.\nThis could be a simple string (e.g. a tracing ID) or structured data\n(e.g. JSON)"
+        }
+      },
+      "description": "Metadata associated with the audio to be recognized."
+    },
+    "cubicRecognitionResponse": {
+      "type": "object",
+      "properties": {
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cubicRecognitionResult"
+          }
+        }
+      },
+      "description": "Collection of sequence of recognition results in a portion of audio.  When\ntranscribing a single audio channel (e.g. RAW_LINEAR16 input, or a mono\nfile), results will be ordered chronologically.  When transcribing multiple\nchannels, the results of all channels will be interleaved.  Results of each\nindividual channel will be chronological.  No such promise is made for the\nordering of results of different channels, as results are returned for each\nchannel individually as soon as they are ready."
+    },
+    "cubicRecognitionResult": {
+      "type": "object",
+      "properties": {
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cubicRecognitionAlternative"
+          },
+          "title": "An n-best list of recognition hypotheses alternatives"
+        },
+        "isPartial": {
+          "type": "boolean",
+          "description": "If this is set to true, it denotes that the result is an interim partial\nresult, and could change after more audio is processed.  If unset, or set\nto false, it denotes that this is a final result and will not change.\n\nServers are not required to implement support for returning partial\nresults, and clients should generally not depend on their availability."
+        },
+        "cnet": {
+          "$ref": "#/definitions/cubicRecognitionConfusionNetwork",
+          "description": "If `enable_confusion_network` was set to true in the `RecognitionConfig`,\nand if the model supports it, a confusion network will be available in the\nresults."
+        },
+        "audioChannel": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Channel of the audio file that this result was transcribed from.  For a\nmono file, or RAW_LINEAR16 input, this will be set to 0."
+        }
+      },
+      "description": "A recognition result corresponding to a portion of audio."
+    },
+    "cubicRecognizeRequest": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/cubicRecognitionConfig",
+          "description": "Provides configuration to create the recognizer."
+        },
+        "audio": {
+          "$ref": "#/definitions/cubicRecognitionAudio",
+          "title": "The audio data to be recognized"
+        }
+      },
+      "description": "The top-level message sent by the client for the `Recognize` method.  Both\nthe `RecognitionConfig` and `RecognitionAudio` fields are required.  The\nentire audio data must be sent in one request.  If your audio data is larger,\nplease use the `StreamingRecognize` call.."
+    },
+    "cubicStreamingRecognizeRequest": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/cubicRecognitionConfig"
+        },
+        "audio": {
+          "$ref": "#/definitions/cubicRecognitionAudio"
+        }
+      },
+      "description": "The top-level message sent by the client for the `StreamingRecognize`\nrequest.  Multiple `StreamingRecognizeRequest` messages are sent. The first\nmessage must contain a `RecognitionConfig` message only, and all subsequent\nmessages must contain `RecognitionAudio` only.  All `RecognitionAudio`\nmessages must contain non-empty audio.  If audio content is empty, the server\nmay interpret it as end of stream and stop accepting any further messages."
+    },
+    "cubicVersionResponse": {
+      "type": "object",
+      "properties": {
+        "cubic": {
+          "type": "string",
+          "title": "version of the cubic library handling the recognition"
+        },
+        "server": {
+          "type": "string",
+          "title": "version of the server handling these requests"
+        }
+      },
+      "description": "The message sent by the server for the `Version` method."
+    },
+    "cubicWordInfo": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "title": "The actual word in the text"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1.  A higher number represents a\nhigher likelihood that the word was correctly recognized."
+        },
+        "startTime": {
+          "type": "string",
+          "description": "Time offset relative to the beginning of audio received by the recognizer\nand corresponding to the start of this spoken word."
+        },
+        "duration": {
+          "type": "string",
+          "description": "Duration of the current word in the spoken audio."
+        }
+      },
+      "title": "Word-specific information for recognized words"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}

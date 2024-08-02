@@ -1,0 +1,1848 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "cobaltspeech/bluehenge/v2/bluehenge.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "BluehengeService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/bluehenge/v2/create-session": {
+      "post": {
+        "summary": "Create a new Bluehenge session. Also returns a list of\nactions to take next.",
+        "operationId": "BluehengeService_CreateSession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bluehengev2CreateSessionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `CreateSession` method.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/bluehengev2CreateSessionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/delete-session": {
+      "post": {
+        "summary": "Delete the session. Behavior is undefined if the given\nTokenData is used again after this function is called.",
+        "operationId": "BluehengeService_DeleteSession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bluehengev2DeleteSessionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `DeleteSession` method.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/bluehengev2DeleteSessionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/get-entity": {
+      "post": {
+        "summary": "Gets the data contained within a single entity identified by name.\nEntities contain information about parts and other question\nanswering content. See Entity for more details.",
+        "operationId": "BluehengeService_GetEntity",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2GetEntityResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2GetEntityRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/get-entity-image-data": {
+      "post": {
+        "summary": "Gets the data related with an image.\nThe actual image will be served over HTTP.",
+        "operationId": "BluehengeService_GetEntityImageData",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2GetEntityImageDataResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2GetEntityImageDataRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/get-extraction-relationship": {
+      "post": {
+        "summary": "Gets the data related with an entity extraction triple for a\nspecific entity-relation pair, e.g. entity:\"sky\", relation:\"has color\"\nExtractions contain Subject-Relation-Object sets. For example,\nentity:\"sky\", relation:\"has color\", object:\"blue\".",
+        "operationId": "BluehengeService_GetExtractionRelationship",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2GetExtractionRelationshipResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2GetExtractionRelationshipRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/get-procedure": {
+      "post": {
+        "summary": "Gets a single procedure identified by id.\nThe response returns everything you should need to be able to display the\nProcedure and it's Steps and Tasks to the user.",
+        "operationId": "BluehengeService_GetProcedure",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2GetProcedureResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Input to get a single procedure by its id.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2GetProcedureRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/get-task": {
+      "post": {
+        "summary": "Gets a single task identified by id.\nThe response returns everything you should need to be able to display the\nTask and it's Steps to the user.",
+        "operationId": "BluehengeService_GetTask",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2GetTaskResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Input to get a single task by its id.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2GetTaskRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/list-entities": {
+      "get": {
+        "summary": "Returns a list of all entities.\nThis list contains every entity in the knowledge graph and can\nbe used for fuzzy matching or any other time you need everything.",
+        "operationId": "BluehengeService_ListEntities",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2ListEntitiesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/list-models": {
+      "get": {
+        "summary": "ListModels returns information about the Bluehenge models\nthe server can access.",
+        "operationId": "BluehengeService_ListModels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cobaltspeechbluehengev2ListModelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/list-procedures": {
+      "get": {
+        "summary": "Returns a list of all the procedures.\nThis list is contains a simplified representation of the procedures,\nwhich can be helpful for displaying a directory or table of contents.\nThe full details of an individual procedure can be retrieved via\nGetProcedure.",
+        "operationId": "BluehengeService_ListProcedures",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2ListProceduresResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/list-trees": {
+      "get": {
+        "summary": "Returns a list of all the trees.\nThis list is contains a simplified representation of the trees,\nwhich can be helpful for displaying a directory or table of contents.\nThe full details of an individual tree can be retrieved via GetTree.",
+        "operationId": "BluehengeService_ListTrees",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2ListTreesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/save-note": {
+      "post": {
+        "summary": "Saves a note in a specific step during a procedure.",
+        "operationId": "BluehengeService_SaveNote",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2SaveNoteResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2SaveNoteRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/update-session": {
+      "post": {
+        "summary": "Process input for a session and get an updated session with\na list of actions to take next. This is the only method\nthat modifies the Bluehenge session state.",
+        "operationId": "BluehengeService_UpdateSession",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/bluehengev2UpdateSessionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `UpdateSession` method.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/bluehengev2UpdateSessionRequest"
+            }
+          }
+        ],
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    },
+    "/api/bluehenge/v2/version": {
+      "get": {
+        "summary": "Returns version information of the Bluehenge server.",
+        "operationId": "BluehengeService_Version",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/cobaltspeechbluehengev2VersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "BluehengeService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "bluehengev2CreateSessionRequest": {
+      "type": "object",
+      "properties": {
+        "diathekeCreateSessionRequest": {
+          "$ref": "#/definitions/diathekev3CreateSessionRequest"
+        }
+      },
+      "description": "The top-level message sent by the client for the `CreateSession` method."
+    },
+    "bluehengev2CreateSessionResponse": {
+      "type": "object",
+      "properties": {
+        "diathekeCreateSessionResponse": {
+          "$ref": "#/definitions/diathekev3CreateSessionResponse"
+        }
+      },
+      "description": "The top-level message sent by the server for the `CreateSession` method."
+    },
+    "bluehengev2DeleteSessionRequest": {
+      "type": "object",
+      "properties": {
+        "diathekeDeleteSessionRequest": {
+          "$ref": "#/definitions/diathekev3DeleteSessionRequest"
+        }
+      },
+      "description": "The top-level message sent by the client for the `DeleteSession` method."
+    },
+    "bluehengev2DeleteSessionResponse": {
+      "type": "object",
+      "properties": {
+        "diathekeDeleteSessionResponse": {
+          "$ref": "#/definitions/diathekev3DeleteSessionResponse"
+        }
+      },
+      "description": "The top-level message sent by the server for the `DeleteSession` method."
+    },
+    "bluehengev2StreamASRResponse": {
+      "type": "object",
+      "properties": {
+        "diathekeStreamAsrResponse": {
+          "$ref": "#/definitions/diathekev3StreamASRResponse",
+          "title": "could be streamASRresponse instead of data"
+        }
+      },
+      "description": "The top-level message sent by the server for the `StreamASR` method."
+    },
+    "bluehengev2StreamTTSResponse": {
+      "type": "object",
+      "properties": {
+        "audio": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "description": "The top-level message sent by the server for the `StreamTTS` method."
+    },
+    "bluehengev2TranscribeResponse": {
+      "type": "object",
+      "properties": {
+        "diathekeTranscribeResponse": {
+          "$ref": "#/definitions/diathekev3TranscribeResponse"
+        }
+      },
+      "description": "The top-level message sent by the server for the `Transcribe` method."
+    },
+    "bluehengev2UpdateSessionRequest": {
+      "type": "object",
+      "properties": {
+        "diathekeUpdateSessionRequest": {
+          "$ref": "#/definitions/diathekev3UpdateSessionRequest"
+        }
+      },
+      "description": "The top-level message sent by the client for the `UpdateSession` method."
+    },
+    "bluehengev2UpdateSessionResponse": {
+      "type": "object",
+      "properties": {
+        "diathekeUpdateSessionResponse": {
+          "$ref": "#/definitions/diathekev3UpdateSessionResponse"
+        }
+      },
+      "description": "The top-level message sent by the server for the `UpdateSession` method."
+    },
+    "cobaltspeechbluehengev2Entity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID of the entity in the knowledge graph."
+        },
+        "mentions": {
+          "$ref": "#/definitions/v2Mention",
+          "description": "The text associated with the entity. These are the names we\nuse to lookup an entity."
+        },
+        "name": {
+          "type": "string",
+          "title": "The 'official' name of the entity"
+        },
+        "description": {
+          "type": "string",
+          "title": "(Optional) A human readable description of the entity"
+        },
+        "location": {
+          "type": "string",
+          "title": "(Optional) A human readable description of how to find the entity"
+        },
+        "page": {
+          "type": "string",
+          "title": "(Optional) The page where the information about the entity is found.\nOften takes the form: \"myDocument.PDF#page=17\""
+        }
+      },
+      "description": "Entities are one of the core information storing blocks in\nthe knowledge graph. They can have images or be part of\nextractions. This makes them extremely versitile.\nEntities are used when you want to display information not\ncontained in Procedures or Tree. For example, question/answering\ncontent, details about aircraft parts, etc."
+    },
+    "cobaltspeechbluehengev2ListModelsResponse": {
+      "type": "object",
+      "properties": {
+        "diathekeListModelsResponse": {
+          "$ref": "#/definitions/diathekev3ListModelsResponse"
+        }
+      },
+      "description": "A list of models available on the Bluehenge server."
+    },
+    "cobaltspeechbluehengev2VersionResponse": {
+      "type": "object",
+      "properties": {
+        "bluehenge": {
+          "type": "string",
+          "title": "Version of the Bluehenge server/engine"
+        },
+        "diathekeVersionResponse": {
+          "$ref": "#/definitions/diathekev3VersionResponse",
+          "title": "Diatheke Version Response"
+        },
+        "sourceDataVersion": {
+          "type": "string",
+          "description": "The date when the source data was last updated.  Source data includes PDFs\nand anything else used to populate the knowledge graph.  Updates to this\nversion imply a new version of knowledge_graph_version."
+        },
+        "knowledgeGraphVersion": {
+          "type": "string",
+          "description": "The build date of the knowledge graph in use.  The knowledge graph is\ngenerated from the source data, but can be updated or modified multiple\ntimes given the same source data, hence the separate version."
+        }
+      },
+      "description": "Lists the version of the Bluehenge server."
+    },
+    "cobaltspeechchosunv2Entity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The name of the entity."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the entity based on the input text. Depending on the\nChosun model, this might not be the same as what was given in\nthe input string, especially if a synonym replacement occurred.\nTo find the original value as it was given in the input, use the\nstart and end index of the entity."
+        },
+        "start": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The index in the original text string where the entity value begins."
+        },
+        "end": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The index in the original text string where the entity value ends.\nNote that this index will be one past the last character of the\nentity value."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "confidence is the confidence value between 0 and 1 for the given entity."
+        }
+      },
+      "description": "An entity recognized from the input text."
+    },
+    "diathekev3CreateSessionRequest": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "Specifies the Diatheke model ID to use for the session."
+        },
+        "wakeword": {
+          "type": "string",
+          "description": "Specifies a custom wakeword to use for this session. The\nwakeword must be enabled in the Diatheke model for this\nto have any effect. It will override the default wakeword\nspecified in the model."
+        },
+        "metadata": {
+          "$ref": "#/definitions/v3SessionMetadata",
+          "description": "This is an optional field to provide any metadata associated with the\nsession. The server may record this metadata when processing the\nrequest. The server does not use this field for any other purpose."
+        }
+      },
+      "description": "The top-level message sent by the client for the `CreateSession` method."
+    },
+    "diathekev3CreateSessionResponse": {
+      "type": "object",
+      "properties": {
+        "sessionOutput": {
+          "$ref": "#/definitions/v3SessionOutput"
+        }
+      },
+      "description": "The top-level message sent by the server for the `CreateSession` method."
+    },
+    "diathekev3DeleteSessionRequest": {
+      "type": "object",
+      "properties": {
+        "tokenData": {
+          "$ref": "#/definitions/v3TokenData"
+        }
+      },
+      "description": "The top-level message sent by the client for the `DeleteSession` method."
+    },
+    "diathekev3DeleteSessionResponse": {
+      "type": "object",
+      "description": "The top-level message sent by the server for the `DeleteSession` method."
+    },
+    "diathekev3ListModelsRequest": {
+      "type": "object",
+      "description": "The top-level message sent by the client for the `ListModels` method."
+    },
+    "diathekev3ListModelsResponse": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/diathekev3ModelInfo"
+          }
+        }
+      },
+      "description": "A list of models available on the Diatheke server."
+    },
+    "diathekev3ModelInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Diatheke model ID, which is used to create a new session."
+        },
+        "name": {
+          "type": "string",
+          "description": "Pretty model name, which may be used for display purposes."
+        },
+        "language": {
+          "type": "string",
+          "description": "Language code of the model."
+        },
+        "asrSampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The ASR audio sample rate, if ASR is enabled."
+        },
+        "ttsSampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The TTS audio sample rate, if TTS is enabled."
+        }
+      },
+      "description": "Information about a single Diatheke model."
+    },
+    "diathekev3StreamASRRequest": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "$ref": "#/definitions/v3TokenData",
+          "description": "Session data, used to determine the correct Cubic\nmodel to use for ASR, with other contextual\ninformation."
+        },
+        "audio": {
+          "type": "string",
+          "format": "byte",
+          "description": "Audio data to transcribe."
+        }
+      },
+      "description": "Data to send to the ASR stream. The first message on the\nstream must be the session token followed by audio data."
+    },
+    "diathekev3StreamASRResponse": {
+      "type": "object",
+      "properties": {
+        "asrResult": {
+          "$ref": "#/definitions/v3ASRResult"
+        }
+      }
+    },
+    "diathekev3StreamTTSRequest": {
+      "type": "object",
+      "properties": {
+        "replyAction": {
+          "$ref": "#/definitions/v3ReplyAction",
+          "description": "Reply action contains reply text and model ID."
+        },
+        "token": {
+          "$ref": "#/definitions/v3TokenData",
+          "description": "Token data to provide session ID and other contextual information."
+        }
+      },
+      "description": "The top-level message sent by the client for the `StreamTTS` method."
+    },
+    "diathekev3TranscribeRequest": {
+      "type": "object",
+      "properties": {
+        "action": {
+          "$ref": "#/definitions/v3TranscribeAction",
+          "description": "Action defining the transcribe configuration."
+        },
+        "audio": {
+          "type": "string",
+          "format": "byte",
+          "description": "Audio data to transcribe."
+        }
+      },
+      "description": "Data to send to the Transcribe stream. The first message on\nthe stream must be a TranscribeAction, followed by audio data."
+    },
+    "diathekev3TranscribeResponse": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The transcription."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number\nrepresents a higher likelihood that the transcription\nis correct."
+        },
+        "isPartial": {
+          "type": "boolean",
+          "description": "True if this is a partial result, in which case the\nnext result will be for the same audio, either repeating\nor correcting the text in this result. When false, this\nrepresents the final transcription for an utterance, which\nwill not change with further audio input. It is sent when\nthe ASR has identified an endpoint. After the final\ntranscription is sent, any additional results sent on the\nTranscribe stream belong to the next utterance."
+        },
+        "cubicResult": {
+          "$ref": "#/definitions/v5RecognitionResult",
+          "description": "Cubic recognition result."
+        }
+      },
+      "description": "The result from the Transcribe stream. Usually, several partial\n(or intermediate) transcriptions will be sent until the final\ntranscription is ready for every utterance processed."
+    },
+    "diathekev3UpdateSessionRequest": {
+      "type": "object",
+      "properties": {
+        "sessionInput": {
+          "$ref": "#/definitions/v3SessionInput"
+        }
+      },
+      "description": "The top-level message sent by the client for the `UpdateSession` method."
+    },
+    "diathekev3UpdateSessionResponse": {
+      "type": "object",
+      "properties": {
+        "sessionOutput": {
+          "$ref": "#/definitions/v3SessionOutput"
+        }
+      },
+      "description": "The top-level message sent by the server for the `UpdateSession` method."
+    },
+    "diathekev3VersionResponse": {
+      "type": "object",
+      "properties": {
+        "diatheke": {
+          "type": "string",
+          "title": "Dialog management engine"
+        },
+        "chosun": {
+          "type": "string",
+          "title": "NLU engine"
+        },
+        "cubic": {
+          "type": "string",
+          "title": "ASR engine"
+        },
+        "luna": {
+          "type": "string",
+          "title": "TTS engine"
+        }
+      },
+      "description": "Lists the version of Diatheke and the engines it uses."
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v2Extraction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID of the extraction in the knowledge graph."
+        },
+        "subject": {
+          "$ref": "#/definitions/cobaltspeechbluehengev2Entity",
+          "title": "The subject of the extraction"
+        },
+        "object": {
+          "$ref": "#/definitions/cobaltspeechbluehengev2Entity",
+          "title": "The object of the extraction"
+        },
+        "relation": {
+          "$ref": "#/definitions/v2Relation",
+          "title": "The relation of the extraction"
+        }
+      },
+      "description": "Extractions contain Subject-Relation-Object sets. For example,\nsubject:\"sky\", relation:\"has color\", object:\"blue\"."
+    },
+    "v2GetEntityImageDataRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Id of an entity image"
+        }
+      },
+      "title": "Input to get the entity of an image"
+    },
+    "v2GetEntityImageDataResponse": {
+      "type": "object",
+      "properties": {
+        "imageDataList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2ImageData"
+          },
+          "description": "List of images data."
+        }
+      },
+      "title": "Output of get entity image"
+    },
+    "v2GetEntityRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name of entity"
+        }
+      },
+      "title": "Input to get an extraction triple about an entity and relation"
+    },
+    "v2GetEntityResponse": {
+      "type": "object",
+      "properties": {
+        "entity": {
+          "$ref": "#/definitions/cobaltspeechbluehengev2Entity",
+          "description": "The extraction data object."
+        }
+      },
+      "description": "Output of GetExtractionRelationship."
+    },
+    "v2GetExtractionRelationshipRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "Name of entity"
+        },
+        "relation": {
+          "type": "string",
+          "title": "Name of Relation"
+        }
+      },
+      "title": "Input to get an extraction triple about an entity and relation"
+    },
+    "v2GetExtractionRelationshipResponse": {
+      "type": "object",
+      "properties": {
+        "extraction": {
+          "$ref": "#/definitions/v2Extraction",
+          "description": "The extraction data object."
+        }
+      },
+      "description": "Output of GetExtractionRelationship."
+    },
+    "v2GetProcedureRequest": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "name to identify a single procedure"
+        }
+      },
+      "description": "Input to get a single procedure by its id."
+    },
+    "v2GetProcedureResponse": {
+      "type": "object",
+      "properties": {
+        "procedure": {
+          "$ref": "#/definitions/v2Procedure",
+          "description": "Individual procedure requested."
+        }
+      },
+      "description": "Returns all data related to a single procedure."
+    },
+    "v2GetTaskRequest": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "knowledge graph ID that uniquely identifies a single task"
+        }
+      },
+      "description": "Input to get a single task by its id."
+    },
+    "v2GetTaskResponse": {
+      "type": "object",
+      "properties": {
+        "task": {
+          "$ref": "#/definitions/v2Task",
+          "description": "Individual task requested."
+        }
+      },
+      "description": "Returns all data related to a single task."
+    },
+    "v2GetTreeResponse": {
+      "type": "object",
+      "properties": {
+        "tree": {
+          "$ref": "#/definitions/v2Tree",
+          "description": "Individual tree requested."
+        }
+      },
+      "description": "Returns all data related to a single tree."
+    },
+    "v2ImageData": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID of an image."
+        },
+        "httpPath": {
+          "type": "string",
+          "description": "File path of an image.  Should be sent to the http server to get the actual image."
+        },
+        "caption": {
+          "type": "string",
+          "title": "Caption of an image. i.e. \"Figure 4.3: removal of alternator\""
+        }
+      },
+      "description": "Data related to an image."
+    },
+    "v2Intent": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "The domain recognized for the query. If a Chosun model was queried\ndirectly, this will be an empty string."
+        },
+        "id": {
+          "type": "string",
+          "description": "The name of the intent."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number\nrepresents a higher likelihood of the output being\ncorrect."
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cobaltspeechchosunv2Entity"
+          },
+          "description": "The list of entities recognized with this intent."
+        },
+        "text": {
+          "type": "string",
+          "description": "The text of the query. This is helpful when an n-best list is provided."
+        }
+      },
+      "description": "An intent recognized from the input text."
+    },
+    "v2ListEntitiesResponse": {
+      "type": "object",
+      "properties": {
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/cobaltspeechbluehengev2Entity"
+          }
+        }
+      },
+      "title": "List of all entities.\nHelpful for fuzzy matching entity names"
+    },
+    "v2ListProceduresResponse": {
+      "type": "object",
+      "properties": {
+        "procedures": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2ProcedureLite"
+          },
+          "description": "List of individual procedures. For efficiency, does not\nreturn all the information for each step, just the high-level details."
+        }
+      },
+      "description": "List of all procedures.\nHelpful for displaying a directory or table of contents."
+    },
+    "v2ListTreesResponse": {
+      "type": "object",
+      "properties": {
+        "trees": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2TreeLite"
+          },
+          "description": "List of individual trees. For efficiency, does not\nreturn all the information for each step, just the high-level details."
+        }
+      },
+      "description": "List of all trees.\nHelpful for displaying a directory or table of contents."
+    },
+    "v2Mention": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "Arbitrary text field asociated with Entities \u0026 Relations"
+        }
+      },
+      "description": "The text asociated with Entities \u0026 Relations. If an entity\nhas multiple names, there will be one entity but two mentions."
+    },
+    "v2Note": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "Text of the note"
+        }
+      },
+      "description": "User defined notes."
+    },
+    "v2ParseResponse": {
+      "type": "object",
+      "properties": {
+        "intents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2Intent"
+          },
+          "description": "The list of recognized intents, sorted by confidence."
+        }
+      },
+      "description": "Data returned from the Parse method."
+    },
+    "v2Procedure": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Unique ID of the procedure"
+        },
+        "name": {
+          "type": "string",
+          "title": "User facing name of the procedure"
+        },
+        "procedureNumber": {
+          "type": "string",
+          "description": "Number of the procedure, as defined by the manual."
+        },
+        "additionalNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "AdditionalNames of the task\nOther ways to  refer to the Procedure."
+        },
+        "prerequisitesWarningText": {
+          "type": "string",
+          "title": "A caution that the user should hear before starting work"
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2Task"
+          },
+          "description": "List of all Tasks inside of a procedure."
+        }
+      },
+      "description": "Full representation of a procedure, including all sub tasks and steps.\nSee also ProcedureLite."
+    },
+    "v2ProcedureLite": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Unique ID of the procedure"
+        },
+        "procedureName": {
+          "type": "string",
+          "title": "User facing name of the procedure"
+        },
+        "page": {
+          "type": "string",
+          "description": "Information related to where the Procedure is in the manual PDF used to generate the data."
+        },
+        "procedureNumber": {
+          "type": "string",
+          "description": "Number of the procedure, as defined by the manual."
+        },
+        "tasks": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2TaskLite"
+          },
+          "description": "Information related to the tasks related to the procedure."
+        }
+      },
+      "description": "A simplified representation of a procedure.\nSee Procedure for full details of a procedure.\n\nProcedureLite is useful for getting a full list of all procedures\nwithout getting all of the underlying data related to all tasks and steps."
+    },
+    "v2Relation": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique ID of the mention in the knowledge graph."
+        },
+        "mentions": {
+          "$ref": "#/definitions/v2Mention",
+          "title": "The text associated with the relation"
+        }
+      },
+      "description": "Relations are the connections between entities. A relation\ncan relate to any property. E.g, in the example \"The sky\nis blue.\" the relation is \"has color\"."
+    },
+    "v2SaveNoteRequest": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "Text of a note to save"
+        },
+        "stepId": {
+          "type": "string",
+          "title": "Step id of a note to save"
+        }
+      },
+      "title": "Input to save a note"
+    },
+    "v2SaveNoteResponse": {
+      "type": "object",
+      "title": "Empty response once the note is saved"
+    },
+    "v2StepData": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Unique ID of the step"
+        },
+        "instructionText": {
+          "type": "string",
+          "description": "Instructions of the step, pulled directly from the manual."
+        },
+        "summaryText": {
+          "type": "string",
+          "description": "Summary of the step, helpful for giving a shorter summary of the instruction_text.\nNot always populated.  When not populated, instruction_text should be used."
+        },
+        "person": {
+          "type": "string",
+          "title": "DisplayLabelText of the step"
+        },
+        "taskNumber": {
+          "type": "string",
+          "description": "Number of the Task to which this step belongs."
+        },
+        "stepNumber": {
+          "type": "string",
+          "description": "Number of the task, as defined by the manual."
+        },
+        "page": {
+          "type": "string",
+          "description": "Page number the step is located at in the pdf."
+        },
+        "segmentType": {
+          "type": "string",
+          "description": "the type of the step (instruction, warning, step, note). For TTS."
+        },
+        "image": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "Image of the step\nA URL or relative path to where the multiple media is stored"
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "The parts mentioned in the step"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2Note"
+          },
+          "title": "List of notes of the step\nUser defined notes associated with this specific step"
+        }
+      },
+      "title": "Data of a step within a task"
+    },
+    "v2Task": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Unique ID of the task"
+        },
+        "taskName": {
+          "type": "string",
+          "title": "User facing name of the task"
+        },
+        "taskNumber": {
+          "type": "string",
+          "description": "Number of the task, as defined by the manual."
+        },
+        "additionalNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "AdditionalNames of the task\nOther ways to  refer to the task. See comment in `Procedure`"
+        },
+        "warningText": {
+          "type": "string",
+          "title": "WarningText of the task\nA specific warning before starting the task"
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2StepData"
+          },
+          "title": "List of steps of the task"
+        }
+      },
+      "title": "Data of a task within a procedure"
+    },
+    "v2TaskLite": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Unique ID of the task"
+        },
+        "taskName": {
+          "type": "string",
+          "title": "User facing name of the task"
+        },
+        "taskNumber": {
+          "type": "string",
+          "description": "Number of the task, as defined by the manual."
+        }
+      },
+      "description": "A simplified representation of a task.\nUseful for getting a full list of all Tasks without\ngetting all of the underlying data related to the steps."
+    },
+    "v2Tree": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Unique ID of the tree"
+        },
+        "treeName": {
+          "type": "string",
+          "title": "User facing name of the tree"
+        },
+        "treeNumber": {
+          "type": "string",
+          "description": "Number of the tree, as defined by the manual."
+        },
+        "additionalNames": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "AdditionalNames of the task\nOther ways to refer to the tree."
+        },
+        "prerequisitesWarningText": {
+          "type": "string",
+          "title": "A caution that the user should hear before starting work"
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2TreeNode"
+          },
+          "description": "Ordered list (not any treelike structure) of all nodes inside of a tree."
+        }
+      },
+      "description": "Representation of the root node of a troubleshooting Tree.\nContains general information about tree and all child nodes."
+    },
+    "v2TreeLite": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Unique ID of the tree"
+        },
+        "treeName": {
+          "type": "string",
+          "title": "User facing name of the tree"
+        },
+        "treeNumber": {
+          "type": "string",
+          "description": "Number of the tree, as defined by the manual."
+        }
+      },
+      "description": "A simplified representation of a tree.\nSee Tree for full details of a tree.\n\nTreeLite is useful for getting a full list of all trees\nwithout getting all of the underlying data related to its TreeNodes."
+    },
+    "v2TreeNode": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "Unique ID of the tree"
+        },
+        "nodeIndex": {
+          "type": "string",
+          "title": "Index/key of node in the tree"
+        },
+        "instructionText": {
+          "type": "string",
+          "description": "Instructions of the step, pulled directly from the manual."
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2TroubleOptions"
+          },
+          "title": "List of troubleshooting options at given step"
+        },
+        "image": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "Image of the step\nA URL or relative path to where the multiple media is stored"
+        },
+        "parts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "The parts mentioned in the step"
+        },
+        "notes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2Note"
+          },
+          "title": "List of notes of the step\nUser defined notes associated with this specific step"
+        }
+      },
+      "description": "Representation of single node in a Tree."
+    },
+    "v2TroubleOptions": {
+      "type": "object",
+      "properties": {
+        "condition": {
+          "type": "string",
+          "description": "Condition that needs to be true for next step\ne.g. \"Yes\", \"No\", \"On\", \"Off\", \"Has fuel\", etc."
+        },
+        "destination": {
+          "type": "string",
+          "title": "The node_index of the next step"
+        }
+      },
+      "description": "User defined notes."
+    },
+    "v3ASRResult": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The transcription."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number\nrepresents a higher likelihood of the output being\ncorrect."
+        },
+        "timedOut": {
+          "type": "boolean",
+          "description": "True if a timeout was defined for the session's current\ninput state in the Diatheke model, and the timeout\nexpired before getting a transcription. This timeout\nrefers to the amount of time a user has to verbally\nrespond to Diatheke after the ASR stream has been\ncreated, and should not be confused with a network\nconnection timeout."
+        },
+        "cubicResult": {
+          "$ref": "#/definitions/v5RecognitionResult",
+          "description": "Cubic recognition result."
+        }
+      },
+      "description": "The result from the ASR stream, sent after the ASR engine\nhas endpointed or the stream was closed by the client."
+    },
+    "v3ActionData": {
+      "type": "object",
+      "properties": {
+        "input": {
+          "$ref": "#/definitions/v3WaitForUserAction",
+          "description": "The user must provide input to Diatheke."
+        },
+        "command": {
+          "$ref": "#/definitions/v3CommandAction",
+          "description": "The client app must execute the specified command."
+        },
+        "reply": {
+          "$ref": "#/definitions/v3ReplyAction",
+          "description": "The client app should provide the reply to the user."
+        },
+        "transcribe": {
+          "$ref": "#/definitions/v3TranscribeAction",
+          "description": "The client app should call the Transcribe method to\ncapture the user's input."
+        }
+      },
+      "description": "Specifies an action that the client application should take."
+    },
+    "v3CommandAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of the command to execute, as defined in the\nDiatheke model."
+        },
+        "inputParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          }
+        },
+        "nluResult": {
+          "$ref": "#/definitions/v2ParseResponse",
+          "title": "NLU result"
+        }
+      },
+      "description": "This action indicates that the client application should\nexecute a command."
+    },
+    "v3CommandResult": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "The command ID, as given by the CommandAction"
+        },
+        "outParameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Output from the command expected by the Diatheke model.\nFor example, this could be the result of a data query."
+        },
+        "error": {
+          "type": "string",
+          "description": "If there was an error during execution, indicate it\nhere with a brief message that will be logged by\nDiatheke."
+        }
+      },
+      "description": "The result of executing a command."
+    },
+    "v3ReplyAction": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "title": "Text of the reply"
+        },
+        "lunaModel": {
+          "type": "string",
+          "title": "TTS model to use with the TTSReply method"
+        }
+      },
+      "description": "This action indicates that the client application should\ngive the provided text to the user. This action may also\nbe used to synthesize speech with the StreamTTS method."
+    },
+    "v3SessionInput": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "$ref": "#/definitions/v3TokenData",
+          "description": "The session token."
+        },
+        "text": {
+          "$ref": "#/definitions/v3TextInput",
+          "description": "Process the user supplied text."
+        },
+        "asr": {
+          "$ref": "#/definitions/v3ASRResult",
+          "description": "Process an ASR result."
+        },
+        "cmd": {
+          "$ref": "#/definitions/v3CommandResult",
+          "description": "Process the result of a completed command."
+        },
+        "story": {
+          "$ref": "#/definitions/v3SetStory",
+          "description": "Change the current session state."
+        }
+      },
+      "description": "Used by Diatheke to update the session state."
+    },
+    "v3SessionMetadata": {
+      "type": "object",
+      "properties": {
+        "customMetadata": {
+          "type": "string",
+          "description": "Any custom metadata that the client wants to associate with the session.\nThis could be a simple string (e.g. a tracing ID) or structured data\n(e.g. JSON)."
+        },
+        "storageFilePrefix": {
+          "type": "string",
+          "description": "This is an optional field to specify prefix of files that will be\nsaved for this session."
+        }
+      },
+      "description": "Metadata associated with the session."
+    },
+    "v3SessionOutput": {
+      "type": "object",
+      "properties": {
+        "token": {
+          "$ref": "#/definitions/v3TokenData",
+          "description": "The updated session token."
+        },
+        "actionList": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v3ActionData"
+          },
+          "description": "The list of actions the client should take next,\nusing the session token returned with this result."
+        }
+      },
+      "description": "The result of updating a session."
+    },
+    "v3SetStory": {
+      "type": "object",
+      "properties": {
+        "storyId": {
+          "type": "string",
+          "description": "The ID of the story to run, as defined in the\nDiatheke model."
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "A list of parameters to set before running the given\nstory. This will replace any parameters currently\ndefined in the session."
+        }
+      },
+      "description": "Changes the current state of a Diatheke session to run at\nthe specified story."
+    },
+    "v3TextInput": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string"
+        }
+      },
+      "description": "User supplied text to send to Diatheke for processing."
+    },
+    "v3TokenData": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte"
+        },
+        "id": {
+          "type": "string",
+          "description": "Session ID, useful for correlating logging between a\nclient and the server."
+        },
+        "metadata": {
+          "type": "string",
+          "description": "Additional data supplied by the client app, which will\nbe logged with other session info by the server."
+        }
+      },
+      "description": "A token that represents a single Diatheke session and its\ncurrent state."
+    },
+    "v3TranscribeAction": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The ID of the transcribe action, which is useful to\ndifferentiate separate transcription tasks within a\nsingle sesssion."
+        },
+        "cubicModelId": {
+          "type": "string",
+          "description": "(Required) The ASR model to use for transcription."
+        },
+        "diathekeModelId": {
+          "type": "string",
+          "description": "(Optional) A Diatheke model to use for end-of-stream\nconditions. If empty, the server will not be able to\nautomatically close the transcribe stream based on\nconditions defined in the model, such as\na non-speech timeout or an \"end-transcription\" intent.\nWhen empty, the stream must be closed by the client\napplication."
+        }
+      },
+      "description": "This action indicates that the client application should\ncall the Transcribe method to capture the user's input."
+    },
+    "v3WaitForUserAction": {
+      "type": "object",
+      "properties": {
+        "requiresWakeWord": {
+          "type": "boolean",
+          "description": "True if the next user input must begin with a wake-word."
+        },
+        "immediate": {
+          "type": "boolean",
+          "description": "True if the input is required immediately (i.e., in\nresponse to a question Diatheke asked the user). When\nfalse, the client should be allowed to wait indefinitely\nfor the user to provide input."
+        }
+      },
+      "description": "This action indicates that Diatheke is expecting user input."
+    },
+    "v5ConfusionNetworkArc": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "title": "Word in the recognized transcript"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood that the word was correctly recognized."
+        },
+        "features": {
+          "$ref": "#/definitions/v5ConfusionNetworkArcFeatures",
+          "title": "Features related to this arc"
+        }
+      },
+      "title": "An Arc inside a Confusion Network Link"
+    },
+    "v5ConfusionNetworkArcFeatures": {
+      "type": "object",
+      "properties": {
+        "confidence": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": "A map of features that are used for recalculating confidence scores of this\nconfusion network arc"
+        }
+      },
+      "title": "Features related to confusion network arcs"
+    },
+    "v5ConfusionNetworkLink": {
+      "type": "object",
+      "properties": {
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "title": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this link"
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "title": "Duration in milliseconds of the current link in the confusion network"
+        },
+        "arcs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5ConfusionNetworkArc"
+          },
+          "title": "Arcs between this link"
+        }
+      },
+      "title": "A Link inside a confusion network"
+    },
+    "v5RecognitionAlternative": {
+      "type": "object",
+      "properties": {
+        "transcriptFormatted": {
+          "type": "string",
+          "description": "Text representing the transcription of the words that the user spoke.\n\nThe transcript will be formatted according to the servers formatting\nconfiguration. If you want the raw transcript, please see the field\n`transcript_raw`. If the server is configured to not use any formatting,\nthen this field will contain the raw transcript.\n\nAs an example, if the spoken utterance was \"four people\", and the server\nwas configured to format numbers, this field would be set to \"4 people\"."
+        },
+        "transcriptRaw": {
+          "type": "string",
+          "description": "Text representing the transcription of the words that the user spoke,\nwithout any formatting applied. If you want the formatted transcript,\nplease see the field `transcript_formatted`.\n\nAs an example, if the spoken utterance was `four people`, this field would\nbe set to \"FOUR PEOPLE\"."
+        },
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this utterance."
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Duration in milliseconds of the current utterance in the spoken audio."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood of the output being correct."
+        },
+        "wordDetails": {
+          "$ref": "#/definitions/v5WordDetails",
+          "description": "Word-level details corresponding to the transcripts. This is available only\nif `enable_word_details` was set to `true` in the `RecognitionConfig`."
+        }
+      },
+      "title": "A recognition hypothesis"
+    },
+    "v5RecognitionConfusionNetwork": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5ConfusionNetworkLink"
+          }
+        }
+      },
+      "title": "Confusion network in recognition output"
+    },
+    "v5RecognitionResult": {
+      "type": "object",
+      "properties": {
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5RecognitionAlternative"
+          },
+          "title": "An n-best list of recognition hypotheses alternatives"
+        },
+        "isPartial": {
+          "type": "boolean",
+          "description": "If this is set to true, it denotes that the result is an interim partial\nresult, and could change after more audio is processed. If unset, or set to\nfalse, it denotes that this is a final result and will not change.\n\nServers are not required to implement support for returning partial\nresults, and clients should generally not depend on their availability."
+        },
+        "cnet": {
+          "$ref": "#/definitions/v5RecognitionConfusionNetwork",
+          "description": "If `enable_confusion_network` was set to true in the `RecognitionConfig`,\nand if the model supports it, a confusion network will be available in the\nresults."
+        },
+        "audioChannel": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Channel of the audio file that this result was transcribed from. Channels\nare 0-indexed, so the for mono audio data, this value will always be 0."
+        }
+      },
+      "description": "A recognition result corresponding to a portion of audio."
+    },
+    "v5WordDetails": {
+      "type": "object",
+      "properties": {
+        "formatted": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5WordInfo"
+          },
+          "description": "Word-level information corresponding to the `transcript_formatted` field."
+        },
+        "raw": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5WordInfo"
+          },
+          "description": "Word-level information corresponding to the `transcript_raw` field."
+        }
+      }
+    },
+    "v5WordInfo": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "title": "The actual word in the text"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood that the word was correctly recognized."
+        },
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this spoken word."
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Duration in milliseconds of the current word in the spoken audio."
+        }
+      },
+      "title": "Word level details for recognized words in a transcript"
+    }
+  }
+}

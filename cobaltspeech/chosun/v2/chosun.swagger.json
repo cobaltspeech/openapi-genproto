@@ -1,0 +1,409 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "cobaltspeech/chosun/v2/chosun.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "ChosunService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/chosun/v2/list-models": {
+      "get": {
+        "summary": "ListModels returns information about the Chosun models\nthe server can access.",
+        "operationId": "ChosunService_ListModels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2ListModelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ChosunService"
+        ]
+      }
+    },
+    "/api/chosun/v2/parse": {
+      "post": {
+        "summary": "Process text and return the recognized intents and entity values.",
+        "operationId": "ChosunService_Parse",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2ParseResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "Data input for the Parse method.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v2ParseRequest"
+            }
+          }
+        ],
+        "tags": [
+          "ChosunService"
+        ]
+      }
+    },
+    "/api/chosun/v2/version": {
+      "get": {
+        "summary": "Returns server version information.",
+        "operationId": "ChosunService_Version",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v2VersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "ChosunService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v2CNet": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2CNetLink"
+          }
+        }
+      }
+    },
+    "v2CNetArc": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "float"
+        }
+      },
+      "description": "A candidate word within a confusion network link."
+    },
+    "v2CNetLink": {
+      "type": "object",
+      "properties": {
+        "arcs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2CNetArc"
+          }
+        }
+      },
+      "description": "A segment of time for a confusion network."
+    },
+    "v2DomainInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Chosun domain ID."
+        },
+        "name": {
+          "type": "string",
+          "description": "Pretty domain name, which may be used for display purposes."
+        },
+        "domains": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "string"
+          },
+          "description": "Mapping from domain labels to the ID of the Chosun model representing\nthe domain."
+        }
+      },
+      "description": "Information about a domain set."
+    },
+    "v2Entity": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "The name of the entity."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the entity based on the input text. Depending on the\nChosun model, this might not be the same as what was given in\nthe input string, especially if a synonym replacement occurred.\nTo find the original value as it was given in the input, use the\nstart and end index of the entity."
+        },
+        "start": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The index in the original text string where the entity value begins."
+        },
+        "end": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The index in the original text string where the entity value ends.\nNote that this index will be one past the last character of the\nentity value."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "confidence is the confidence value between 0 and 1 for the given entity."
+        }
+      },
+      "description": "An entity recognized from the input text."
+    },
+    "v2Hypothesis": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "Text of the hypothesis."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "float",
+          "description": "The confidence measure for the hypothesis from the model that generated\nthe hypothesis."
+        }
+      },
+      "description": "Hypothesis holds the text of a possible transcript in a query."
+    },
+    "v2Intent": {
+      "type": "object",
+      "properties": {
+        "domain": {
+          "type": "string",
+          "description": "The domain recognized for the query. If a Chosun model was queried\ndirectly, this will be an empty string."
+        },
+        "id": {
+          "type": "string",
+          "description": "The name of the intent."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number\nrepresents a higher likelihood of the output being\ncorrect."
+        },
+        "entities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2Entity"
+          },
+          "description": "The list of entities recognized with this intent."
+        },
+        "text": {
+          "type": "string",
+          "description": "The text of the query. This is helpful when an n-best list is provided."
+        }
+      },
+      "description": "An intent recognized from the input text."
+    },
+    "v2ListModelsResponse": {
+      "type": "object",
+      "properties": {
+        "domainSets": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2DomainInfo"
+          }
+        },
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2ModelInfo"
+          }
+        }
+      },
+      "description": "A list of models available on the Chosun server."
+    },
+    "v2ModelInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Chosun model ID, which is used to parse NLU input."
+        },
+        "name": {
+          "type": "string",
+          "description": "Pretty model name, which may be used for display purposes."
+        }
+      },
+      "description": "Information about a single Chosun model."
+    },
+    "v2NBest": {
+      "type": "object",
+      "properties": {
+        "hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2Hypothesis"
+          }
+        }
+      }
+    },
+    "v2NBestTokens": {
+      "type": "object",
+      "properties": {
+        "hypotheses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2TokenHypothesis"
+          }
+        }
+      },
+      "description": "An n-best list where the hypotheses are broken into tokens with token-level\nconfidences."
+    },
+    "v2ParseRequest": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "The ID for the model Chosun should use during processing."
+        },
+        "domain": {
+          "type": "string",
+          "description": "The domain to use in a domain set. If this is set, domain classification\nis skipped and the model corresponding to the domain is queried. This\nshould not be set for models other than domain sets."
+        },
+        "text": {
+          "type": "string",
+          "description": "A 1-best query."
+        },
+        "nbest": {
+          "$ref": "#/definitions/v2NBest",
+          "description": "An n-best query. The hypotheses should be sorted in order of\ndecreasing confidence."
+        },
+        "cnet": {
+          "$ref": "#/definitions/v2CNet",
+          "description": "A confusion network query."
+        },
+        "nbestTokens": {
+          "$ref": "#/definitions/v2NBestTokens",
+          "description": "An n-best query broken into tokens with per-word confidences.\nLike the n-best above, the hypotheses should be sorted."
+        },
+        "contextFeatures": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "format": "float"
+          },
+          "description": "Contextual features to use in the query."
+        },
+        "intentWhitelist": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of whitelisted intents. If the list is empty, all intents will be\nconsidered."
+        }
+      },
+      "description": "Data input for the Parse method."
+    },
+    "v2ParseResponse": {
+      "type": "object",
+      "properties": {
+        "intents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2Intent"
+          },
+          "description": "The list of recognized intents, sorted by confidence."
+        }
+      },
+      "description": "Data returned from the Parse method."
+    },
+    "v2TokenHypothesis": {
+      "type": "object",
+      "properties": {
+        "tokens": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v2CNetArc"
+          },
+          "description": "Tokens in the hypothesis with text and confidence scores."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "float",
+          "description": "The utterance-level confidence."
+        }
+      }
+    },
+    "v2VersionResponse": {
+      "type": "object",
+      "properties": {
+        "chosun": {
+          "type": "string"
+        }
+      },
+      "description": "Lists the Chosun version."
+    }
+  }
+}

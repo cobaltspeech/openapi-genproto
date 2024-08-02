@@ -1,0 +1,662 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "cobaltspeech/cubic/v5/cubic.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "CubicService"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/api/cubic/v5/compile-context": {
+      "post": {
+        "summary": "Compiles recognition context information, such as a specialized list of\nwords or phrases, into a compact, efficient form to send with subsequent\n`StreamingRecognize` requests to customize speech recognition. For example,\na list of contact names may be compiled in a mobile app and sent with each\nrecognition request so that the app user's contact names are more likely to\nbe recognized than arbitrary names. This pre-compilation ensures that there\nis no added latency for the recognition request. It is important to note\nthat in order to compile context for a model, that model has to support\ncontext in the first place, which can be verified by checking its\n`ModelAttributes.ContextInfo` obtained via the `ListModels` method. Also,\nthe compiled data will be model specific; that is, the data compiled for\none model will generally not be usable with a different model.",
+        "operationId": "CubicService_CompileContext",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v5CompileContextResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level message sent by the client for the `CompileContext` request. It\ncontains a list of phrases or words, paired with a context token included in\nthe model being used. The token specifies a category such as \"menu_item\",\n\"airport\", \"contact\", \"product_name\" etc. The context token is used to\ndetermine the places in the recognition output where the provided list of\nphrases or words may appear. The allowed context tokens for a given model can\nbe found in its `ModelAttributes.ContextInfo` obtained via the `ListModels`\nmethod.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v5CompileContextRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CubicService"
+        ]
+      }
+    },
+    "/api/cubic/v5/list-models": {
+      "get": {
+        "summary": "Retrieves a list of available speech recognition models.",
+        "operationId": "CubicService_ListModels",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v5ListModelsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "CubicService"
+        ]
+      }
+    },
+    "/api/cubic/v5/streaming-recognize": {
+      "post": {
+        "summary": "Performs bidirectional streaming speech recognition. Receive results while\nsending audio. This method is only available via GRPC and not via\nHTTP+JSON. However, a web browser may use websockets to use this service.",
+        "operationId": "CubicService_StreamingRecognize",
+        "responses": {
+          "200": {
+            "description": "A successful response.(streaming responses)",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "result": {
+                  "$ref": "#/definitions/v5StreamingRecognizeResponse"
+                },
+                "error": {
+                  "$ref": "#/definitions/rpcStatus"
+                }
+              },
+              "title": "Stream result of v5StreamingRecognizeResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top-level messages sent by the client for the `StreamingRecognize`\nmethod. In this streaming call, multiple `StreamingRecognizeRequest` messages\nshould be sent. The first message must contain a `RecognitionConfig` message\nonly, and all subsequent messages must contain `RecognitionAudio` only. All\n`RecognitionAudio` messages must contain non-empty audio. If audio content is\nempty, the server may choose to interpret it as end of stream and stop\naccepting any further messages. (streaming inputs)",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v5StreamingRecognizeRequest"
+            }
+          }
+        ],
+        "tags": [
+          "CubicService"
+        ]
+      }
+    },
+    "/api/cubic/v5/version": {
+      "get": {
+        "summary": "Queries the version of the server.",
+        "operationId": "CubicService_Version",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v5VersionResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "CubicService"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v5AudioEncoding": {
+      "type": "string",
+      "enum": [
+        "AUDIO_ENCODING_UNSPECIFIED",
+        "AUDIO_ENCODING_SIGNED",
+        "AUDIO_ENCODING_UNSIGNED",
+        "AUDIO_ENCODING_IEEE_FLOAT",
+        "AUDIO_ENCODING_ULAW",
+        "AUDIO_ENCODING_ALAW"
+      ],
+      "default": "AUDIO_ENCODING_UNSPECIFIED",
+      "description": "The encoding of the audio data to be sent for recognition.\n\n - AUDIO_ENCODING_UNSPECIFIED: AUDIO_ENCODING_UNSPECIFIED is the default value of this type and will\nresult in an error.\n - AUDIO_ENCODING_SIGNED: PCM signed-integer\n - AUDIO_ENCODING_UNSIGNED: PCM unsigned-integer\n - AUDIO_ENCODING_IEEE_FLOAT: PCM IEEE-Float\n - AUDIO_ENCODING_ULAW: G.711 mu-law\n - AUDIO_ENCODING_ALAW: G.711 a-law"
+    },
+    "v5AudioFormatHeadered": {
+      "type": "string",
+      "enum": [
+        "AUDIO_FORMAT_HEADERED_UNSPECIFIED",
+        "AUDIO_FORMAT_HEADERED_WAV",
+        "AUDIO_FORMAT_HEADERED_MP3",
+        "AUDIO_FORMAT_HEADERED_FLAC",
+        "AUDIO_FORMAT_HEADERED_OGG_OPUS"
+      ],
+      "default": "AUDIO_FORMAT_HEADERED_UNSPECIFIED",
+      "title": "- AUDIO_FORMAT_HEADERED_UNSPECIFIED: AUDIO_FORMAT_HEADERED_UNSPECIFIED is the default value of this type.\n - AUDIO_FORMAT_HEADERED_WAV: WAV with RIFF headers\n - AUDIO_FORMAT_HEADERED_MP3: MP3 format with a valid frame header at the beginning of data\n - AUDIO_FORMAT_HEADERED_FLAC: FLAC format\n - AUDIO_FORMAT_HEADERED_OGG_OPUS: Opus format with OGG header"
+    },
+    "v5AudioFormatRAW": {
+      "type": "object",
+      "properties": {
+        "encoding": {
+          "$ref": "#/definitions/v5AudioEncoding",
+          "description": "Encoding of the samples. It must be specified explicitly and using the\ndefault value of `AUDIO_ENCODING_UNSPECIFIED` will result in an error."
+        },
+        "bitDepth": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Bit depth of each sample (e.g. 8, 16, 24, 32, etc.). This is a required\nfield."
+        },
+        "byteOrder": {
+          "$ref": "#/definitions/v5ByteOrder",
+          "description": "Byte order of the samples. This field must be set to a value other than\n`BYTE_ORDER_UNSPECIFIED` when the `bit_depth` is greater than 8."
+        },
+        "sampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Sampling rate in Hz. This is a required field."
+        },
+        "channels": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Number of channels present in the audio. E.g.: 1 (mono), 2 (stereo), etc.\nThis is a required field."
+        }
+      },
+      "title": "Details of audio in raw format"
+    },
+    "v5ByteOrder": {
+      "type": "string",
+      "enum": [
+        "BYTE_ORDER_UNSPECIFIED",
+        "BYTE_ORDER_LITTLE_ENDIAN",
+        "BYTE_ORDER_BIG_ENDIAN"
+      ],
+      "default": "BYTE_ORDER_UNSPECIFIED",
+      "description": "- BYTE_ORDER_UNSPECIFIED: BYTE_ORDER_UNSPECIFIED is the default value of this type.\n - BYTE_ORDER_LITTLE_ENDIAN: Little Endian byte order\n - BYTE_ORDER_BIG_ENDIAN: Big Endian byte order",
+      "title": "Byte order of multi-byte data"
+    },
+    "v5CompileContextRequest": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "Unique identifier of the model to compile the context information for. The\nmodel chosen needs to support context which can be verified by checking its\n`ModelAttributes.ContextInfo` obtained via `ListModels`."
+        },
+        "token": {
+          "type": "string",
+          "description": "The token that is associated with the provided list of phrases or words\n(e.g \"menu_item\", \"airport\" etc.). Must be one of the tokens included in\nthe model being used, which can be retrieved by calling the `ListModels`\nmethod."
+        },
+        "phrases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5ContextPhrase"
+          },
+          "description": "List of phrases and/or words to be compiled."
+        }
+      },
+      "description": "The top-level message sent by the client for the `CompileContext` request. It\ncontains a list of phrases or words, paired with a context token included in\nthe model being used. The token specifies a category such as \"menu_item\",\n\"airport\", \"contact\", \"product_name\" etc. The context token is used to\ndetermine the places in the recognition output where the provided list of\nphrases or words may appear. The allowed context tokens for a given model can\nbe found in its `ModelAttributes.ContextInfo` obtained via the `ListModels`\nmethod."
+    },
+    "v5CompileContextResponse": {
+      "type": "object",
+      "properties": {
+        "context": {
+          "$ref": "#/definitions/v5CompiledContext",
+          "description": "Context information in a compact form that is efficient for use in\nsubsequent recognition requests. The size of the compiled form will depend\non the amount of text that was sent for compilation. For 1000 words it's\ngenerally less than 100 kilobytes."
+        }
+      },
+      "description": "The message returned to the client by the `CompileContext` method."
+    },
+    "v5CompiledContext": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte",
+          "description": "The context information compiled by the `CompileContext` method."
+        }
+      },
+      "description": "Context information in a compact form that is efficient for use in subsequent\nrecognition requests. The size of the compiled form will depend on the amount\nof text that was sent for compilation. For 1000 words it's generally less\nthan 100 kilobytes."
+    },
+    "v5ConfusionNetworkArc": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "title": "Word in the recognized transcript"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood that the word was correctly recognized."
+        },
+        "features": {
+          "$ref": "#/definitions/v5ConfusionNetworkArcFeatures",
+          "title": "Features related to this arc"
+        }
+      },
+      "title": "An Arc inside a Confusion Network Link"
+    },
+    "v5ConfusionNetworkArcFeatures": {
+      "type": "object",
+      "properties": {
+        "confidence": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "format": "double"
+          },
+          "title": "A map of features that are used for recalculating confidence scores of this\nconfusion network arc"
+        }
+      },
+      "title": "Features related to confusion network arcs"
+    },
+    "v5ConfusionNetworkLink": {
+      "type": "object",
+      "properties": {
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "title": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this link"
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "title": "Duration in milliseconds of the current link in the confusion network"
+        },
+        "arcs": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5ConfusionNetworkArc"
+          },
+          "title": "Arcs between this link"
+        }
+      },
+      "title": "A Link inside a confusion network"
+    },
+    "v5ContextInfo": {
+      "type": "object",
+      "properties": {
+        "supportsContext": {
+          "type": "boolean",
+          "description": "If this is set to true, the model supports taking context information into\naccount to aid speech recognition. The information may be sent with with\nrecognition requests via RecognitionContext inside RecognitionConfig."
+        },
+        "allowedContextTokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "A list of tokens (e.g \"name\", \"airport\" etc.) that serve has placeholders\nin the model where a client provided list of phrases or words may be used\nto aid speech recognition and produce the exact desired recognition output."
+        }
+      },
+      "description": "Model information specifc to supporting recognition context."
+    },
+    "v5ContextPhrase": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "description": "The actual phrase or word."
+        },
+        "boost": {
+          "type": "number",
+          "format": "float",
+          "description": "This is an optional field. The boost factor is a positive number which is\nused to multiply the probability of the phrase or word appearing in the\noutput. This setting can be used to differentiate between similar sounding\nwords, with the desired word given a bigger boost factor.\n\nBy default, all phrases or words provided in the `RecongitionContext` are\ngiven an equal probability of occurring. Boost factors larger than 1 make\nthe phrase or word more probable and boost factors less than 1 make it less\nlikely. A boost factor of 2 corresponds to making the phrase or word twice\nas likely, while a boost factor of 0.5 means half as likely."
+        }
+      },
+      "description": "A phrase or word that is to be compiled into context information that can be\nlater used to improve speech recognition during a `StreamingRecognize` call.\nAlong with the phrase or word itself, there is an optional boost parameter\nthat can be used to boost the likelihood of the phrase or word in the\nrecognition output."
+    },
+    "v5ListModelsResponse": {
+      "type": "object",
+      "properties": {
+        "models": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5Model"
+          },
+          "description": "List of models available for use that match the request."
+        }
+      },
+      "description": "The message returned to the client by the `ListModels` method."
+    },
+    "v5Model": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the model. This identifier is used to choose the model\nthat should be used for recognition, and is specified in the\n`RecognitionConfig` message."
+        },
+        "name": {
+          "type": "string",
+          "description": "Model name. This is a concise name describing the model, and may be\npresented to the end-user, for example, to help choose which model to use\nfor their recognition task."
+        },
+        "attributes": {
+          "$ref": "#/definitions/v5ModelAttributes",
+          "title": "Model attributes"
+        }
+      },
+      "title": "Description of a Cubic Model"
+    },
+    "v5ModelAttributes": {
+      "type": "object",
+      "properties": {
+        "sampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "title": "Audio sample rate supported by the model"
+        },
+        "contextInfo": {
+          "$ref": "#/definitions/v5ContextInfo",
+          "description": "Attributes specifc to supporting recognition context."
+        }
+      },
+      "title": "Attributes of a Cubic Model"
+    },
+    "v5RecognitionAlternative": {
+      "type": "object",
+      "properties": {
+        "transcriptFormatted": {
+          "type": "string",
+          "description": "Text representing the transcription of the words that the user spoke.\n\nThe transcript will be formatted according to the servers formatting\nconfiguration. If you want the raw transcript, please see the field\n`transcript_raw`. If the server is configured to not use any formatting,\nthen this field will contain the raw transcript.\n\nAs an example, if the spoken utterance was \"four people\", and the server\nwas configured to format numbers, this field would be set to \"4 people\"."
+        },
+        "transcriptRaw": {
+          "type": "string",
+          "description": "Text representing the transcription of the words that the user spoke,\nwithout any formatting applied. If you want the formatted transcript,\nplease see the field `transcript_formatted`.\n\nAs an example, if the spoken utterance was `four people`, this field would\nbe set to \"FOUR PEOPLE\"."
+        },
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this utterance."
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Duration in milliseconds of the current utterance in the spoken audio."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood of the output being correct."
+        },
+        "wordDetails": {
+          "$ref": "#/definitions/v5WordDetails",
+          "description": "Word-level details corresponding to the transcripts. This is available only\nif `enable_word_details` was set to `true` in the `RecognitionConfig`."
+        }
+      },
+      "title": "A recognition hypothesis"
+    },
+    "v5RecognitionAudio": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "string",
+          "format": "byte"
+        }
+      },
+      "title": "Audio to be sent to the recognizer"
+    },
+    "v5RecognitionConfig": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "Unique identifier of the model to use, as obtained from a `Model` message."
+        },
+        "audioFormatRaw": {
+          "$ref": "#/definitions/v5AudioFormatRAW",
+          "title": "Audio is raw data without any headers"
+        },
+        "audioFormatHeadered": {
+          "$ref": "#/definitions/v5AudioFormatHeadered",
+          "description": "Audio has a self-describing header. Headers are expected to be sent at\nthe beginning of the entire audio file/stream, and not in every\n`RecognitionAudio` message.\n\nThe default value of this type is AUDIO_FORMAT_HEADERED_UNSPECIFIED. If\nthis value is used, the server may attempt to detect the format of the\naudio. However, it is recommended that the exact format be specified."
+        },
+        "selectedAudioChannels": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "description": "This is an optional field. If the audio has multiple channels, this field\ncan be configured with the list of channel indices that should be\nconsidered for the recognition task. These channels are 0-indexed.\n\nExample: `[0]` for a mono file, `[0, 1]` for a stereo file.\nExample: `[1]` to only transcribe the second channel of a stereo file.\n\nIf this field is not set, all the channels in the audio will be processed.\n\nChannels that are present in the audio may be omitted, but it is an error\nto include a channel index in this field that is not present in the audio.\nChannels may be listed in any order but the same index may not be repeated\nin this list.\n\nBAD: `[0, 2]` for a stereo file; BAD: `[0, 0]` for a mono file."
+        },
+        "audioTimeOffsetMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "This is an optional field. It can be used to indicate that the audio being\nstreamed to the recognizer is offset from the original stream by the\nprovided duration in milliseconds. This offset will be added to all\ntimestamps in results returned by the recognizer.\n\nThe default value of this field is 0ms, so the timestamps in the\nrecognition result will not be modified.\n\nExample use case where this field can be helpful: if a recognition session\nwas interrupted and audio needs to be sent to a new session from the point\nwhere the session was previously interrupted, the offset could be set to\nthe point where the interruption had happened."
+        },
+        "enableWordDetails": {
+          "type": "boolean",
+          "description": "This is an optional field. If this is set to `true`, each result will\ninclude word level details of the transcript. These details are specified\nin the `WordDetails` message. If set to `false`, no word-level details will\nbe returned. The default is `false`."
+        },
+        "enableConfusionNetwork": {
+          "type": "boolean",
+          "description": "This is an optional field. If this is set to true, each result will include\na confusion network. If set to `false`, no confusion network will be\nreturned. The default is `false`. If the model being used does not support\nreturning a confusion network, this field will have no effect. Tokens in\nthe confusion network always correspond to tokens in the `transcript_raw`\nreturned."
+        },
+        "metadata": {
+          "$ref": "#/definitions/v5RecognitionMetadata",
+          "description": "This is an optional field. If there is any metadata associated with the\naudio being sent, use this field to provide it to the recognizer. The\nserver may record this metadata when processing the request. The server\ndoes not use this field for any other purpose."
+        },
+        "context": {
+          "$ref": "#/definitions/v5RecognitionContext",
+          "description": "This is an optional field for providing any additional context information\nthat may aid speech recognition. This can also be used to add\nout-of-vocabulary words to the model or boost recognition of specific\nproper names or commands. Context information must be pre-compiled via the\n`CompileContext()` method."
+        }
+      },
+      "title": "Configuration for setting up a Recognizer"
+    },
+    "v5RecognitionConfusionNetwork": {
+      "type": "object",
+      "properties": {
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5ConfusionNetworkLink"
+          }
+        }
+      },
+      "title": "Confusion network in recognition output"
+    },
+    "v5RecognitionContext": {
+      "type": "object",
+      "properties": {
+        "compiled": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5CompiledContext"
+          },
+          "description": "List of compiled context information, with each entry being compiled from a\nlist of words or phrases using the `CompileContext` method."
+        }
+      },
+      "description": "A collection of additional context information that may aid speech\nrecognition. This can be used to add out-of-vocabulary words to the model or\nto boost recognition of specific proper names or commands."
+    },
+    "v5RecognitionError": {
+      "type": "object",
+      "properties": {
+        "message": {
+          "type": "string"
+        }
+      },
+      "description": "Developer-facing error message about a non-fatal recognition issue."
+    },
+    "v5RecognitionMetadata": {
+      "type": "object",
+      "properties": {
+        "customMetadata": {
+          "type": "string",
+          "description": "Any custom metadata that the client wants to associate with the recording.\nThis could be a simple string (e.g. a tracing ID) or structured data\n(e.g. JSON)."
+        }
+      },
+      "description": "Metadata associated with the audio to be recognized."
+    },
+    "v5RecognitionResult": {
+      "type": "object",
+      "properties": {
+        "alternatives": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5RecognitionAlternative"
+          },
+          "title": "An n-best list of recognition hypotheses alternatives"
+        },
+        "isPartial": {
+          "type": "boolean",
+          "description": "If this is set to true, it denotes that the result is an interim partial\nresult, and could change after more audio is processed. If unset, or set to\nfalse, it denotes that this is a final result and will not change.\n\nServers are not required to implement support for returning partial\nresults, and clients should generally not depend on their availability."
+        },
+        "cnet": {
+          "$ref": "#/definitions/v5RecognitionConfusionNetwork",
+          "description": "If `enable_confusion_network` was set to true in the `RecognitionConfig`,\nand if the model supports it, a confusion network will be available in the\nresults."
+        },
+        "audioChannel": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Channel of the audio file that this result was transcribed from. Channels\nare 0-indexed, so the for mono audio data, this value will always be 0."
+        }
+      },
+      "description": "A recognition result corresponding to a portion of audio."
+    },
+    "v5StreamingRecognizeRequest": {
+      "type": "object",
+      "properties": {
+        "config": {
+          "$ref": "#/definitions/v5RecognitionConfig"
+        },
+        "audio": {
+          "$ref": "#/definitions/v5RecognitionAudio"
+        }
+      },
+      "description": "The top-level messages sent by the client for the `StreamingRecognize`\nmethod. In this streaming call, multiple `StreamingRecognizeRequest` messages\nshould be sent. The first message must contain a `RecognitionConfig` message\nonly, and all subsequent messages must contain `RecognitionAudio` only. All\n`RecognitionAudio` messages must contain non-empty audio. If audio content is\nempty, the server may choose to interpret it as end of stream and stop\naccepting any further messages."
+    },
+    "v5StreamingRecognizeResponse": {
+      "type": "object",
+      "properties": {
+        "result": {
+          "$ref": "#/definitions/v5RecognitionResult",
+          "description": "A new recognition result. This field will be unset if a new result is not\nyet available."
+        },
+        "error": {
+          "$ref": "#/definitions/v5RecognitionError",
+          "description": "A non-fatal error message. If a server encountered a non-fatal error when\nprocessing the recognition request, it will be returned in this message.\nThe server will continue to process audio and produce further results.\nClients can continue streaming audio even after receiving these messages.\nThis error message is meant to be informational.\n\nAn example of when these errors maybe produced: audio is sampled at a lower\nrate than expected by model, producing possibly less accurate results.\n\nThis field will be unset if there is no error to report."
+        }
+      },
+      "description": "The messages returned by the server for the `StreamingRecognize` request.\nMultiple messages of this type will be delivered on the stream, for multiple\nresults, as soon as results are available from the audio submitted so far. If\nthe audio has multiple channels, the results of all channels will be\ninterleaved. Results of each individual channel will be chronological.\nHowever, there is no guarantee of the order of results across channels.\n\nClients should process both the `result` and `error` fields in each message.\nAt least one of these fields will be present in the message. If both `result`\nand `error` are present, the result is still valid."
+    },
+    "v5VersionResponse": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Version of the server handling these requests."
+        }
+      },
+      "description": "The message sent by the server for the `Version` method."
+    },
+    "v5WordDetails": {
+      "type": "object",
+      "properties": {
+        "formatted": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5WordInfo"
+          },
+          "description": "Word-level information corresponding to the `transcript_formatted` field."
+        },
+        "raw": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v5WordInfo"
+          },
+          "description": "Word-level information corresponding to the `transcript_raw` field."
+        }
+      }
+    },
+    "v5WordInfo": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "title": "The actual word in the text"
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence estimate between 0 and 1. A higher number represents a higher\nlikelihood that the word was correctly recognized."
+        },
+        "startTimeMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Time offset in milliseconds relative to the beginning of audio received by\nthe recognizer and corresponding to the start of this spoken word."
+        },
+        "durationMs": {
+          "type": "string",
+          "format": "uint64",
+          "description": "Duration in milliseconds of the current word in the spoken audio."
+        }
+      },
+      "title": "Word level details for recognized words in a transcript"
+    }
+  }
+}
