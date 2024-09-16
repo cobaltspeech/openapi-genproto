@@ -608,6 +608,30 @@
       },
       "description": "An entity recognized from the input text."
     },
+    "diathekev3AudioEncoding": {
+      "type": "string",
+      "enum": [
+        "AUDIO_ENCODING_UNSPECIFIED",
+        "AUDIO_ENCODING_SIGNED",
+        "AUDIO_ENCODING_UNSIGNED",
+        "AUDIO_ENCODING_IEEE_FLOAT",
+        "AUDIO_ENCODING_ULAW",
+        "AUDIO_ENCODING_ALAW"
+      ],
+      "default": "AUDIO_ENCODING_UNSPECIFIED",
+      "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_ENCODING_UNSPECIFIED: AUDIO_ENCODING_UNSPECIFIED is the default value of this type and will\nresult in an error.\n - AUDIO_ENCODING_SIGNED: PCM signed-integer\n - AUDIO_ENCODING_UNSIGNED: PCM unsigned-integer\n - AUDIO_ENCODING_IEEE_FLOAT: PCM IEEE-Float\n - AUDIO_ENCODING_ULAW: G.711 mu-law\n - AUDIO_ENCODING_ALAW: G.711 a-law"
+    },
+    "diathekev3ByteOrder": {
+      "type": "string",
+      "enum": [
+        "BYTE_ORDER_UNSPECIFIED",
+        "BYTE_ORDER_LITTLE_ENDIAN",
+        "BYTE_ORDER_BIG_ENDIAN"
+      ],
+      "default": "BYTE_ORDER_UNSPECIFIED",
+      "description": "- BYTE_ORDER_UNSPECIFIED: BYTE_ORDER_UNSPECIFIED is the default value of this type.\n - BYTE_ORDER_LITTLE_ENDIAN: Little Endian byte order\n - BYTE_ORDER_BIG_ENDIAN: Big Endian byte order",
+      "title": "Byte order of multi-byte data"
+    },
     "diathekev3CreateSessionRequest": {
       "type": "object",
       "properties": {
@@ -622,6 +646,14 @@
         "metadata": {
           "$ref": "#/definitions/v3SessionMetadata",
           "description": "This is an optional field to provide any metadata associated with the\nsession. The server may record this metadata when processing the\nrequest. The server does not use this field for any other purpose."
+        },
+        "inputAudioFormat": {
+          "$ref": "#/definitions/v3AudioFormat",
+          "description": "Format of the audio system expects to recieve. This is an optional\nfield, and if no value is specified, input will be assumed to be raw\nbytes (PCM16SLE) at the sample rate that speech processing models\nare configured to use on the server."
+        },
+        "outputAudioFormat": {
+          "$ref": "#/definitions/v3AudioFormat",
+          "description": "Format of the audio client expects to recieve. This is an optional\nfield. If no value is specified, the output will be produced with a\nnative audio format that text-to-speech models are configured on\nthe server."
         }
       },
       "description": "The top-level message sent by the client for the `CreateSession` method."
@@ -1478,6 +1510,52 @@
         }
       },
       "description": "Specifies an action that the client application should take."
+    },
+    "v3AudioCodec": {
+      "type": "string",
+      "enum": [
+        "AUDIO_CODEC_UNSPECIFIED",
+        "AUDIO_CODEC_RAW",
+        "AUDIO_CODEC_WAV",
+        "AUDIO_CODEC_MP3",
+        "AUDIO_CODEC_FLAC",
+        "AUDIO_CODEC_OGG_OPUS"
+      ],
+      "default": "AUDIO_CODEC_UNSPECIFIED",
+      "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_CODEC_UNSPECIFIED: AUDIO_CODEC_UNSPECIFIED is the default value of this type.\n - AUDIO_CODEC_RAW: Raw data without any headers\n - AUDIO_CODEC_WAV: WAV with RIFF headers\n - AUDIO_CODEC_MP3: MP3 format with a valid frame header at the beginning of data\n - AUDIO_CODEC_FLAC: FLAC format\n - AUDIO_CODEC_OGG_OPUS: Opus format with OGG header"
+    },
+    "v3AudioFormat": {
+      "type": "object",
+      "properties": {
+        "sampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Sampling rate in Hz."
+        },
+        "channels": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Number of channels present in the audio. E.g.: 1 (mono), 2 (stereo), etc."
+        },
+        "bitDepth": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Bit depth of each sample (e.g. 8, 16, 24, 32, etc.)."
+        },
+        "codec": {
+          "$ref": "#/definitions/v3AudioCodec",
+          "description": "Codec of the samples."
+        },
+        "encoding": {
+          "$ref": "#/definitions/diathekev3AudioEncoding",
+          "description": "Encoding of the samples."
+        },
+        "byteOrder": {
+          "$ref": "#/definitions/diathekev3ByteOrder",
+          "description": "Byte order of the samples. This field must be set to a value other than\n`BYTE_ORDER_UNSPECIFIED` when the `bit_depth` is greater than 8."
+        }
+      },
+      "title": "Details of audio in format"
     },
     "v3CommandAction": {
       "type": "object",
