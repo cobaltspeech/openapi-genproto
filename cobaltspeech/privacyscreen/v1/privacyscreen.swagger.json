@@ -161,6 +161,17 @@
             "type": "boolean"
           },
           {
+            "name": "config.redactionConfig.disabledClasses",
+            "description": "List of disabled redaction classes. When this list is provided,\nthe default redaction list will be used as default and remove\nthe disabled classes from this list",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
+          },
+          {
             "name": "audio",
             "in": "query",
             "required": false,
@@ -225,6 +236,17 @@
             "in": "query",
             "required": false,
             "type": "boolean"
+          },
+          {
+            "name": "config.redactionConfig.disabledClasses",
+            "description": "List of disabled redaction classes. When this list is provided,\nthe default redaction list will be used as default and remove\nthe disabled classes from this list",
+            "in": "query",
+            "required": false,
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "collectionFormat": "multi"
           },
           {
             "name": "config.enableUnredactedTranscript",
@@ -471,6 +493,13 @@
             "$ref": "#/definitions/v1CustomClass"
           },
           "description": "This is an optional field. If set, then provided list will be used to\nextend the list of redaction classes."
+        },
+        "disabledClasses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "List of disabled redaction classes. When this list is provided,\nthe default redaction list will be used as default and remove\nthe disabled classes from this list"
         }
       },
       "description": "Configuration for setting up a redaction engine."
