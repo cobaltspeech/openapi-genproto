@@ -494,6 +494,14 @@
           },
           "description": "This is an optional field. If set, then provided list will be used to\nextend the list of redaction classes."
         },
+        "customUnredactedClasses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1CustomClass"
+          },
+          "description": "This is an optional field. If set, then text matching against the provided list of custom classes will not be redacted."
+        },
         "disabledClasses": {
           "type": "array",
           "items": {
