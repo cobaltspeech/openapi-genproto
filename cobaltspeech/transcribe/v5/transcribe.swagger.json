@@ -219,7 +219,7 @@
           },
           {
             "name": "config.metadata.customId",
-            "description": "This is an optional field to specify custom ID to identify the recognition\nsession. The custom ID must be a string of upto 64 bytes, and only alphabets,\ndigits, hyphens and underscores are allowed.",
+            "description": "This is an optional field to specify custom ID to identify the recognition\nsession. The custom ID must be a string of upto 64 bytes, and only alphabets,\ndigits, hyphens and underscores are allowed. This ID may be recorded by the\nserver in logs or other storage, and should therefore not include any\nsensitive information.",
             "in": "query",
             "required": false,
             "type": "string"
@@ -677,7 +677,7 @@
         },
         "customId": {
           "type": "string",
-          "description": "This is an optional field to specify custom ID to identify the recognition\nsession. The custom ID must be a string of upto 64 bytes, and only alphabets,\ndigits, hyphens and underscores are allowed."
+          "description": "This is an optional field to specify custom ID to identify the recognition\nsession. The custom ID must be a string of upto 64 bytes, and only alphabets,\ndigits, hyphens and underscores are allowed. This ID may be recorded by the\nserver in logs or other storage, and should therefore not include any\nsensitive information."
         }
       },
       "description": "Metadata associated with the audio to be recognized."
