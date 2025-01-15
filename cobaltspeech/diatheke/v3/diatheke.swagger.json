@@ -108,7 +108,7 @@
       }
     },
     "/api/diatheke/v3/stream-asr": {
-      "post": {
+      "get": {
         "summary": "Create an ASR stream. A result is returned when the\nstream is closed by the client (which forces the ASR to\nendpoint), or when a transcript becomes available on its\nown, in which case the stream is closed by the server.\nThe ASR result may be used in the UpdateSession method.\n\u003cbr/\u003e\u003cbr/\u003e\nIf the session has a wakeword enabled, and the client\napplication is using Diatheke and Cubic to handle the\nwakeword processing, this method will not return a\nresult until the wakeword condition has been satisfied.\nUtterances without the required wakeword will be\ndiscarded and no transcription will be returned.",
         "operationId": "DiathekeService_StreamASR",
         "responses": {
@@ -127,13 +127,33 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": "Data to send to the ASR stream. The first message on the\nstream must be the session token followed by audio data. (streaming inputs)",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3StreamASRRequest"
-            }
+            "name": "token.data",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "token.id",
+            "description": "Session ID, useful for correlating logging between a\nclient and the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "token.metadata",
+            "description": "Additional data supplied by the client app, which will\nbe logged with other session info by the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "audio",
+            "description": "Audio data to transcribe.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
           }
         ],
         "tags": [
@@ -142,7 +162,7 @@
       }
     },
     "/api/diatheke/v3/stream-asr-with-partials": {
-      "post": {
+      "get": {
         "summary": "Performs bidirectional streaming speech recognition. Receive results while\nsending audio. Each result will either be a partial ASR result, or a final\nresult. Partial results will be sent as soon as they are ready, and all\nresults will be sent, regardless of any wakeword configuration in the\nsession. A final result will be sent exactly once, and the stream will be\nclosed then. If a session has a wakeword enabled, the final result will\nonly be emitted if the required wakeword is present. The ASRResult in the\nfinal message maybe used in the UpdateSession method for further dialog\nprocessing.",
         "operationId": "DiathekeService_StreamASRWithPartials",
         "responses": {
@@ -170,13 +190,33 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": "The top-level messages sent by the client for the `StreamASRWithPartials`\nmethod. In this streaming call, multiple `StreamASRWithPartialsRequest`\nmessages should be sent. The first message must contain a `TokenData`\nmessage only and all subsequent messages must contain audio data only. (streaming inputs)",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3StreamASRWithPartialsRequest"
-            }
+            "name": "token.data",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "token.id",
+            "description": "Session ID, useful for correlating logging between a\nclient and the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "token.metadata",
+            "description": "Additional data supplied by the client app, which will\nbe logged with other session info by the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "audio",
+            "description": "Audio data to transcribe.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
           }
         ],
         "tags": [
@@ -185,7 +225,7 @@
       }
     },
     "/api/diatheke/v3/stream-tts": {
-      "post": {
+      "get": {
         "summary": "Create a TTS stream to receive audio for the given reply.\nThe stream will close when TTS is finished. The client\nmay also close the stream early to cancel the speech\nsynthesis.",
         "operationId": "DiathekeService_StreamTTS",
         "responses": {
@@ -213,13 +253,39 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": "The top-level message sent by the client for the `StreamTTS` method.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3StreamTTSRequest"
-            }
+            "name": "replyAction.text",
+            "description": "Text of the reply",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "replyAction.lunaModel",
+            "description": "TTS model to use with the TTSReply method",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "token.data",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "token.id",
+            "description": "Session ID, useful for correlating logging between a\nclient and the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "token.metadata",
+            "description": "Additional data supplied by the client app, which will\nbe logged with other session info by the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
           }
         ],
         "tags": [
@@ -228,7 +294,7 @@
       }
     },
     "/api/diatheke/v3/transcribe": {
-      "post": {
+      "get": {
         "summary": "Create an ASR stream for transcription. Unlike StreamASR,\nTranscribe does not listen for a wakeword. This method\nreturns a bi-directional stream, and its intended use is\nfor situations where a user may say anything at all, whether\nit is short or long, and the application wants to save the\ntranscript (e.g., take a note, send a message).\n\u003cbr/\u003e\u003cbr/\u003e\nThe first message sent to the server must be the TranscribeAction,\nwith remaining messages sending audio data.\nMessages received from the server will include the current\nbest partial transcription until the full transcription is\nready. The stream ends when either the client application\ncloses it, a predefined duration of silence (non-speech)\noccurs, or the end-transcription intent is recognized.",
         "operationId": "DiathekeService_Transcribe",
         "responses": {
@@ -256,13 +322,33 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": "Data to send to the Transcribe stream. The first message on\nthe stream must be a TranscribeAction, followed by audio data. (streaming inputs)",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3TranscribeRequest"
-            }
+            "name": "action.id",
+            "description": "The ID of the transcribe action, which is useful to\ndifferentiate separate transcription tasks within a\nsingle sesssion.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "action.cubicModelId",
+            "description": "(Required) The ASR model to use for transcription.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "action.diathekeModelId",
+            "description": "(Optional) A Diatheke model to use for end-of-stream\nconditions. If empty, the server will not be able to\nautomatically close the transcribe stream based on\nconditions defined in the model, such as\na non-speech timeout or an \"end-transcription\" intent.\nWhen empty, the stream must be closed by the client\napplication.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "audio",
+            "description": "Audio data to transcribe.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
           }
         ],
         "tags": [
@@ -787,21 +873,6 @@
       },
       "description": "Changes the current state of a Diatheke session to run at\nthe specified story."
     },
-    "v3StreamASRRequest": {
-      "type": "object",
-      "properties": {
-        "token": {
-          "$ref": "#/definitions/v3TokenData",
-          "description": "Session data, used to determine the correct Cubic\nmodel to use for ASR, with other contextual\ninformation."
-        },
-        "audio": {
-          "type": "string",
-          "format": "byte",
-          "description": "Audio data to transcribe."
-        }
-      },
-      "description": "Data to send to the ASR stream. The first message on the\nstream must be the session token followed by audio data."
-    },
     "v3StreamASRResponse": {
       "type": "object",
       "properties": {
@@ -809,21 +880,6 @@
           "$ref": "#/definitions/v3ASRResult"
         }
       }
-    },
-    "v3StreamASRWithPartialsRequest": {
-      "type": "object",
-      "properties": {
-        "token": {
-          "$ref": "#/definitions/v3TokenData",
-          "description": "Session data, used to determine the correct Cubic\nmodel to use for ASR, with other contextual\ninformation."
-        },
-        "audio": {
-          "type": "string",
-          "format": "byte",
-          "description": "Audio data to transcribe."
-        }
-      },
-      "description": "The top-level messages sent by the client for the `StreamASRWithPartials`\nmethod. In this streaming call, multiple `StreamASRWithPartialsRequest`\nmessages should be sent. The first message must contain a `TokenData`\nmessage only and all subsequent messages must contain audio data only."
     },
     "v3StreamASRWithPartialsResponse": {
       "type": "object",
@@ -842,20 +898,6 @@
         }
       },
       "description": "The top-level messages sent by the server for the `StreamASRWithPartials`\nmethod. This streaming call will return multiple\n`StreamASRWithPartialsResponse` messages. The messages are multiple messages\ncontain partial recognition result from ASR engine and one last message\ncontain an `ASRResult` that be use to update Diatheke session."
-    },
-    "v3StreamTTSRequest": {
-      "type": "object",
-      "properties": {
-        "replyAction": {
-          "$ref": "#/definitions/v3ReplyAction",
-          "description": "Reply action contains reply text and model ID."
-        },
-        "token": {
-          "$ref": "#/definitions/v3TokenData",
-          "description": "Token data to provide session ID and other contextual information."
-        }
-      },
-      "description": "The top-level message sent by the client for the `StreamTTS` method."
     },
     "v3StreamTTSResponse": {
       "type": "object",
@@ -911,21 +953,6 @@
         }
       },
       "description": "This action indicates that the client application should\ncall the Transcribe method to capture the user's input."
-    },
-    "v3TranscribeRequest": {
-      "type": "object",
-      "properties": {
-        "action": {
-          "$ref": "#/definitions/v3TranscribeAction",
-          "description": "Action defining the transcribe configuration."
-        },
-        "audio": {
-          "type": "string",
-          "format": "byte",
-          "description": "Audio data to transcribe."
-        }
-      },
-      "description": "Data to send to the Transcribe stream. The first message on\nthe stream must be a TranscribeAction, followed by audio data."
     },
     "v3TranscribeResponse": {
       "type": "object",
