@@ -16,7 +16,7 @@
     "application/json"
   ],
   "paths": {
-    "/api/diatheke/v3/create-session": {
+    "/api/interact/v3/create-session": {
       "post": {
         "summary": "Create a new Cobalt Interact session. Also returns a list of\nactions to take next.",
         "operationId": "InteractService_CreateSession",
@@ -50,7 +50,7 @@
         ]
       }
     },
-    "/api/diatheke/v3/delete-session": {
+    "/api/interact/v3/delete-session": {
       "post": {
         "summary": "Delete the session. Behavior is undefined if the given\nTokenData in the request is used again after this function is called.",
         "operationId": "InteractService_DeleteSession",
@@ -84,7 +84,7 @@
         ]
       }
     },
-    "/api/diatheke/v3/list-models": {
+    "/api/interact/v3/list-models": {
       "get": {
         "summary": "ListModels returns information about the Cobalt Interact models\nthe server can access.",
         "operationId": "InteractService_ListModels",
@@ -107,8 +107,8 @@
         ]
       }
     },
-    "/api/diatheke/v3/stream-asr": {
-      "post": {
+    "/api/interact/v3/stream-asr": {
+      "get": {
         "summary": "Create an ASR stream. A result is returned when the\nstream is closed by the client (which forces the ASR to\nendpoint), or when a transcript becomes available on its\nown, in which case the stream is closed by the server.\nThe ASR result may be used in the UpdateSession method.\n\u003cbr/\u003e\u003cbr/\u003e\nIf the session has a wakeword enabled, and the client\napplication is using Cobalt Interact and Cobalt Transcribe\nto handle the wakeword processing, this method will not\nreturn a result until the wakeword condition has been\nsatisfied. Utterances without the required wakeword will\nbe discarded and no transcription will be returned.",
         "operationId": "InteractService_StreamASR",
         "responses": {
@@ -127,13 +127,33 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": "Data to send to the ASR stream. The first message on the\nstream must be the session token followed by audio data. (streaming inputs)",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3StreamASRRequest"
-            }
+            "name": "token.data",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "token.id",
+            "description": "Session ID, useful for correlating logging between a\nclient and the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "token.metadata",
+            "description": "Additional data supplied by the client app, which will\nbe logged with other session info by the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "audio",
+            "description": "Audio data to transcribe.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
           }
         ],
         "tags": [
@@ -141,8 +161,8 @@
         ]
       }
     },
-    "/api/diatheke/v3/stream-asr-with-partials": {
-      "post": {
+    "/api/interact/v3/stream-asr-with-partials": {
+      "get": {
         "summary": "Performs bidirectional streaming speech recognition. Receive results while\nsending audio. Each result will either be a partial ASR result, or a final\nresult. Partial results will be sent as soon as they are ready, and all\nresults will be sent, regardless of any wakeword configuration in the\nsession. A final result will be sent exactly once, and the stream will be\nclosed then. If a session has a wakeword enabled, the final result will\nonly be emitted if the required wakeword is present. The ASRResult in the\nfinal message maybe used in the UpdateSession method for further dialog\nprocessing.",
         "operationId": "InteractService_StreamASRWithPartials",
         "responses": {
@@ -170,13 +190,33 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": "The top-level messages sent by the client for the `StreamASRWithPartials`\nmethod. In this streaming call, multiple `StreamASRWithPartialsRequest`\nmessages should be sent. The first message must contain a `TokenData`\nmessage only and all subsequent messages must contain audio data only. (streaming inputs)",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3StreamASRWithPartialsRequest"
-            }
+            "name": "token.data",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "token.id",
+            "description": "Session ID, useful for correlating logging between a\nclient and the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "token.metadata",
+            "description": "Additional data supplied by the client app, which will\nbe logged with other session info by the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "audio",
+            "description": "Audio data to transcribe.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
           }
         ],
         "tags": [
@@ -184,8 +224,8 @@
         ]
       }
     },
-    "/api/diatheke/v3/stream-tts": {
-      "post": {
+    "/api/interact/v3/stream-tts": {
+      "get": {
         "summary": "Create a TTS stream to receive audio for the given reply.\nThe stream will close when TTS is finished. The client\nmay also close the stream early to cancel the speech\nsynthesis.",
         "operationId": "InteractService_StreamTTS",
         "responses": {
@@ -213,13 +253,135 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": "The top-level message sent by the client for the `StreamTTS` method.",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3StreamTTSRequest"
-            }
+            "name": "replyAction.text",
+            "description": "Text of the reply",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "replyAction.lunaModel",
+            "description": "TTS model to use with the TTSReply method",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "token.data",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
+          },
+          {
+            "name": "token.id",
+            "description": "Session ID, useful for correlating logging between a\nclient and the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "token.metadata",
+            "description": "Additional data supplied by the client app, which will\nbe logged with other session info by the server.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "synthesisConfig.modelId",
+            "description": "Unique identifier of the model to use, as obtained from a `ModelInfo` message.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "synthesisConfig.speakerId",
+            "description": "Unique identifier of the speaker to use, as obtained from a `SpeakerInfo` message.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "synthesisConfig.audioFormat.sampleRate",
+            "description": "Sampling rate in Hz.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "synthesisConfig.audioFormat.channels",
+            "description": "Number of channels present in the audio. E.g.: 1 (mono), 2 (stereo), etc.",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "synthesisConfig.audioFormat.bitDepth",
+            "description": "Bit depth of each sample (e.g. 8, 16, 24, 32, etc.).",
+            "in": "query",
+            "required": false,
+            "type": "integer",
+            "format": "int64"
+          },
+          {
+            "name": "synthesisConfig.audioFormat.codec",
+            "description": "Codec of the samples.\n\n - AUDIO_CODEC_UNSPECIFIED: AUDIO_CODEC_UNSPECIFIED is the default value of this type.\n - AUDIO_CODEC_RAW: Raw data without any headers\n - AUDIO_CODEC_WAV: WAV with RIFF headers",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "AUDIO_CODEC_UNSPECIFIED",
+              "AUDIO_CODEC_RAW",
+              "AUDIO_CODEC_WAV"
+            ],
+            "default": "AUDIO_CODEC_UNSPECIFIED"
+          },
+          {
+            "name": "synthesisConfig.audioFormat.encoding",
+            "description": "Encoding of the samples.\n\n - AUDIO_ENCODING_UNSPECIFIED: AUDIO_ENCODING_UNSPECIFIED is the default value of this type and will\nresult in an error.\n - AUDIO_ENCODING_SIGNED: PCM signed-integer\n - AUDIO_ENCODING_UNSIGNED: PCM unsigned-integer\n - AUDIO_ENCODING_IEEE_FLOAT: PCM IEEE-Float\n - AUDIO_ENCODING_ULAW: G.711 mu-law\n - AUDIO_ENCODING_ALAW: G.711 a-law",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "AUDIO_ENCODING_UNSPECIFIED",
+              "AUDIO_ENCODING_SIGNED",
+              "AUDIO_ENCODING_UNSIGNED",
+              "AUDIO_ENCODING_IEEE_FLOAT",
+              "AUDIO_ENCODING_ULAW",
+              "AUDIO_ENCODING_ALAW"
+            ],
+            "default": "AUDIO_ENCODING_UNSPECIFIED"
+          },
+          {
+            "name": "synthesisConfig.audioFormat.byteOrder",
+            "description": "Byte order of the samples. This field must be set to a value other than\n`BYTE_ORDER_UNSPECIFIED` when the `bit_depth` is greater than 8.\n\n - BYTE_ORDER_UNSPECIFIED: BYTE_ORDER_UNSPECIFIED is the default value of this type.\n - BYTE_ORDER_LITTLE_ENDIAN: Little Endian byte order\n - BYTE_ORDER_BIG_ENDIAN: Big Endian byte order",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "enum": [
+              "BYTE_ORDER_UNSPECIFIED",
+              "BYTE_ORDER_LITTLE_ENDIAN",
+              "BYTE_ORDER_BIG_ENDIAN"
+            ],
+            "default": "BYTE_ORDER_UNSPECIFIED"
+          },
+          {
+            "name": "synthesisConfig.speechRate",
+            "description": "The speech rate for synthesized audio. If unset, then the default speech rate of\na given model is used. Otherwise a value \u003e 0 should be used, with higher values\nresulting in faster speech. This field only has an effect on the synthesized audio\nif the model supports it, which can be ascertained from the\n`ModelAttributes.supported_features`.",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "float"
+          },
+          {
+            "name": "synthesisConfig.variationScale",
+            "description": "A scale with values \u003e 0, to determine how much to randomly vary the synthesized\naudio by altering stresses and emphasis on different parts of the audio. Higher\nvalues correspond to greater variation. This field only has an affect on the\nsynthesized audio if the model supports it, which can be ascertained from the\n`ModelAttributes.supported_features`.",
+            "in": "query",
+            "required": false,
+            "type": "number",
+            "format": "float"
           }
         ],
         "tags": [
@@ -227,8 +389,8 @@
         ]
       }
     },
-    "/api/diatheke/v3/transcribe": {
-      "post": {
+    "/api/interact/v3/transcribe": {
+      "get": {
         "summary": "Create an ASR stream for transcription. Unlike StreamASR,\nTranscribe does not listen for a wakeword. This method\nreturns a bi-directional stream, and its intended use is\nfor situations where a user may say anything at all, whether\nit is short or long, and the application wants to save the\ntranscript (e.g., take a note, send a message).\n\u003cbr/\u003e\u003cbr/\u003e\nThe first message sent to the server must be the TranscribeAction,\nwith remaining messages sending audio data.\nMessages received from the server will include the current\nbest partial transcription until the full transcription is\nready. The stream ends when either the client application\ncloses it, a predefined duration of silence (non-speech)\noccurs, or the end-transcription intent is recognized.",
         "operationId": "InteractService_Transcribe",
         "responses": {
@@ -256,13 +418,33 @@
         },
         "parameters": [
           {
-            "name": "body",
-            "description": "Data to send to the Transcribe stream. The first message on\nthe stream must be a TranscribeAction, followed by audio data. (streaming inputs)",
-            "in": "body",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/v3TranscribeRequest"
-            }
+            "name": "action.id",
+            "description": "The ID of the transcribe action, which is useful to\ndifferentiate separate transcription tasks within a\nsingle sesssion.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "action.cubicModelId",
+            "description": "(Required) The ASR model to use for transcription.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "action.diathekeModelId",
+            "description": "(Optional) A Cobalt Interact model to use for end-of-stream\nconditions. If empty, the server will not be able to\nautomatically close the transcribe stream based on\nconditions defined in the model, such as\na non-speech timeout or an \"end-transcription\" intent.\nWhen empty, the stream must be closed by the client\napplication.",
+            "in": "query",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "audio",
+            "description": "Audio data to transcribe.",
+            "in": "query",
+            "required": false,
+            "type": "string",
+            "format": "byte"
           }
         ],
         "tags": [
@@ -270,7 +452,7 @@
         ]
       }
     },
-    "/api/diatheke/v3/update-session": {
+    "/api/interact/v3/update-session": {
       "post": {
         "summary": "Process input for a session and get an updated session with\na list of actions to take next. This is the only method\nthat modifies the Cobalt Interact session state.",
         "operationId": "InteractService_UpdateSession",
@@ -304,7 +486,7 @@
         ]
       }
     },
-    "/api/diatheke/v3/version": {
+    "/api/interact/v3/version": {
       "get": {
         "summary": "Returns version information from the server.",
         "operationId": "InteractService_Version",
@@ -329,6 +511,19 @@
     }
   },
   "definitions": {
+    "interactv3AudioCodec": {
+      "type": "string",
+      "enum": [
+        "AUDIO_CODEC_UNSPECIFIED",
+        "AUDIO_CODEC_RAW",
+        "AUDIO_CODEC_WAV",
+        "AUDIO_CODEC_MP3",
+        "AUDIO_CODEC_FLAC",
+        "AUDIO_CODEC_OGG_OPUS"
+      ],
+      "default": "AUDIO_CODEC_UNSPECIFIED",
+      "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_CODEC_UNSPECIFIED: AUDIO_CODEC_UNSPECIFIED is the default value of this type.\n - AUDIO_CODEC_RAW: Raw data without any headers\n - AUDIO_CODEC_WAV: WAV with RIFF headers\n - AUDIO_CODEC_MP3: MP3 format with a valid frame header at the beginning of data\n - AUDIO_CODEC_FLAC: FLAC format\n - AUDIO_CODEC_OGG_OPUS: Opus format with OGG header"
+    },
     "interactv3AudioEncoding": {
       "type": "string",
       "enum": [
@@ -341,6 +536,39 @@
       ],
       "default": "AUDIO_ENCODING_UNSPECIFIED",
       "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_ENCODING_UNSPECIFIED: AUDIO_ENCODING_UNSPECIFIED is the default value of this type and will\nresult in an error.\n - AUDIO_ENCODING_SIGNED: PCM signed-integer\n - AUDIO_ENCODING_UNSIGNED: PCM unsigned-integer\n - AUDIO_ENCODING_IEEE_FLOAT: PCM IEEE-Float\n - AUDIO_ENCODING_ULAW: G.711 mu-law\n - AUDIO_ENCODING_ALAW: G.711 a-law"
+    },
+    "interactv3AudioFormat": {
+      "type": "object",
+      "properties": {
+        "sampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Sampling rate in Hz."
+        },
+        "channels": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Number of channels present in the audio. E.g.: 1 (mono), 2 (stereo), etc."
+        },
+        "bitDepth": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Bit depth of each sample (e.g. 8, 16, 24, 32, etc.)."
+        },
+        "codec": {
+          "$ref": "#/definitions/interactv3AudioCodec",
+          "description": "Codec of the samples."
+        },
+        "encoding": {
+          "$ref": "#/definitions/interactv3AudioEncoding",
+          "description": "Encoding of the samples."
+        },
+        "byteOrder": {
+          "$ref": "#/definitions/interactv3ByteOrder",
+          "description": "Byte order of the samples. This field must be set to a value other than\n`BYTE_ORDER_UNSPECIFIED` when the `bit_depth` is greater than 8."
+        }
+      },
+      "title": "Details of audio in format"
     },
     "interactv3ByteOrder": {
       "type": "string",
@@ -390,6 +618,13 @@
           "type": "integer",
           "format": "int64",
           "description": "The TTS audio sample rate, if TTS is enabled."
+        },
+        "ttsModelAttributes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/voicegenv1ModelAttributes"
+          }
         }
       },
       "description": "Information about a single Cobalt Interact model."
@@ -443,6 +678,90 @@
           }
         }
       }
+    },
+    "v1ModelFeatures": {
+      "type": "object",
+      "properties": {
+        "speechRate": {
+          "type": "boolean",
+          "description": "This is set to true if the model can be configured to synthesize audio at different\ntalking speeds."
+        },
+        "variationScale": {
+          "type": "boolean",
+          "description": "This is set to true if the model can be configured to synthesize audio for a given\ntext input differently than usual by varying stresses, and emphasis on different\nparts of the audio. This feature is useful for making the audio sound slightly\ndifferent each time to avoid making it feel monotonous."
+        }
+      }
+    },
+    "v1PhoneSet": {
+      "type": "string",
+      "enum": [
+        "PHONE_SET_UNSPECIFIED",
+        "PHONE_SET_IPA",
+        "PHONE_SET_XSAMPA",
+        "PHONE_SET_ARPABET"
+      ],
+      "default": "PHONE_SET_UNSPECIFIED",
+      "description": "PhoneSet is a set of phonemes for words pronunciation.\n\n - PHONE_SET_UNSPECIFIED: PHONE_SET_UNSPECIFIED is the default value of this type.\n - PHONE_SET_IPA: IPA phoneme set\n - PHONE_SET_XSAMPA: X-SAMPA phoneme set\n - PHONE_SET_ARPABET: ARPAbet phoneme set"
+    },
+    "v1SpeakerAttributes": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "Language of the speaker. This can be different from model language.\nE.g. an english model with different accents: en-US, en-GB, en-IN etc."
+        }
+      },
+      "title": "Attributes of a speaker"
+    },
+    "v1SpeakerInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier of the speaker. This identifier is used to choose the speaker\nthat should be used for synthesis, and is specified in the\n`SynthesisConfig` message."
+        },
+        "name": {
+          "type": "string",
+          "description": "Speaker name. This is a concise name describing the speaker, and may be\npresented to the end-user, for example, to help choose which speaker to use\nfor their synthesis task."
+        },
+        "description": {
+          "type": "string",
+          "description": "Speaker description. This is may be presented to the end-user, for example, to\nhelp choose which speaker to use for their synthesis task."
+        },
+        "attributes": {
+          "$ref": "#/definitions/v1SpeakerAttributes",
+          "description": "Speaker attributes."
+        }
+      },
+      "title": "Description of a speaker"
+    },
+    "v1SynthesisConfig": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "Unique identifier of the model to use, as obtained from a `ModelInfo` message."
+        },
+        "speakerId": {
+          "type": "string",
+          "description": "Unique identifier of the speaker to use, as obtained from a `SpeakerInfo` message."
+        },
+        "audioFormat": {
+          "$ref": "#/definitions/voicegenv1AudioFormat",
+          "description": "Format of the audio to be sent for synthesis. If no value specify, default value\nof native audio format of the specified model will be used. Native audio format\ncan be obtained from `ModelAttributes` message."
+        },
+        "speechRate": {
+          "type": "number",
+          "format": "float",
+          "description": "The speech rate for synthesized audio. If unset, then the default speech rate of\na given model is used. Otherwise a value \u003e 0 should be used, with higher values\nresulting in faster speech. This field only has an effect on the synthesized audio\nif the model supports it, which can be ascertained from the\n`ModelAttributes.supported_features`."
+        },
+        "variationScale": {
+          "type": "number",
+          "format": "float",
+          "description": "A scale with values \u003e 0, to determine how much to randomly vary the synthesized\naudio by altering stresses and emphasis on different parts of the audio. Higher\nvalues correspond to greater variation. This field only has an affect on the\nsynthesized audio if the model supports it, which can be ascertained from the\n`ModelAttributes.supported_features`."
+        }
+      },
+      "title": "Configuration for setting up a Synthesizer"
     },
     "v2Entity": {
       "type": "object",
@@ -563,52 +882,6 @@
       },
       "description": "Specifies an action that the client application should take."
     },
-    "v3AudioCodec": {
-      "type": "string",
-      "enum": [
-        "AUDIO_CODEC_UNSPECIFIED",
-        "AUDIO_CODEC_RAW",
-        "AUDIO_CODEC_WAV",
-        "AUDIO_CODEC_MP3",
-        "AUDIO_CODEC_FLAC",
-        "AUDIO_CODEC_OGG_OPUS"
-      ],
-      "default": "AUDIO_CODEC_UNSPECIFIED",
-      "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_CODEC_UNSPECIFIED: AUDIO_CODEC_UNSPECIFIED is the default value of this type.\n - AUDIO_CODEC_RAW: Raw data without any headers\n - AUDIO_CODEC_WAV: WAV with RIFF headers\n - AUDIO_CODEC_MP3: MP3 format with a valid frame header at the beginning of data\n - AUDIO_CODEC_FLAC: FLAC format\n - AUDIO_CODEC_OGG_OPUS: Opus format with OGG header"
-    },
-    "v3AudioFormat": {
-      "type": "object",
-      "properties": {
-        "sampleRate": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Sampling rate in Hz."
-        },
-        "channels": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Number of channels present in the audio. E.g.: 1 (mono), 2 (stereo), etc."
-        },
-        "bitDepth": {
-          "type": "integer",
-          "format": "int64",
-          "description": "Bit depth of each sample (e.g. 8, 16, 24, 32, etc.)."
-        },
-        "codec": {
-          "$ref": "#/definitions/v3AudioCodec",
-          "description": "Codec of the samples."
-        },
-        "encoding": {
-          "$ref": "#/definitions/interactv3AudioEncoding",
-          "description": "Encoding of the samples."
-        },
-        "byteOrder": {
-          "$ref": "#/definitions/interactv3ByteOrder",
-          "description": "Byte order of the samples. This field must be set to a value other than\n`BYTE_ORDER_UNSPECIFIED` when the `bit_depth` is greater than 8."
-        }
-      },
-      "title": "Details of audio in format"
-    },
     "v3CommandAction": {
       "type": "object",
       "properties": {
@@ -666,11 +939,11 @@
           "description": "This is an optional field to provide any metadata associated with the\nsession. The server may record this metadata when processing the\nrequest. The server does not use this field for any other purpose."
         },
         "inputAudioFormat": {
-          "$ref": "#/definitions/v3AudioFormat",
+          "$ref": "#/definitions/interactv3AudioFormat",
           "description": "Format of the audio system expects to recieve. This is an optional\nfield, and if no value is specified, input will be assumed to be raw\nbytes (PCM16SLE) at the sample rate that speech processing models\nare configured to use on the server."
         },
         "outputAudioFormat": {
-          "$ref": "#/definitions/v3AudioFormat",
+          "$ref": "#/definitions/interactv3AudioFormat",
           "description": "Format of the audio client expects to recieve. This is an optional\nfield. If no value is specified, the output will be produced with a\nnative audio format that text-to-speech models are configured on\nthe server."
         }
       },
@@ -787,21 +1060,6 @@
       },
       "description": "Changes the current state of a Cobalt Interact session to run at\nthe specified story."
     },
-    "v3StreamASRRequest": {
-      "type": "object",
-      "properties": {
-        "token": {
-          "$ref": "#/definitions/v3TokenData",
-          "description": "Session data, used to determine the correct ASR\nmodel to use, with other contextual information."
-        },
-        "audio": {
-          "type": "string",
-          "format": "byte",
-          "description": "Audio data to transcribe."
-        }
-      },
-      "description": "Data to send to the ASR stream. The first message on the\nstream must be the session token followed by audio data."
-    },
     "v3StreamASRResponse": {
       "type": "object",
       "properties": {
@@ -809,21 +1067,6 @@
           "$ref": "#/definitions/v3ASRResult"
         }
       }
-    },
-    "v3StreamASRWithPartialsRequest": {
-      "type": "object",
-      "properties": {
-        "token": {
-          "$ref": "#/definitions/v3TokenData",
-          "description": "Session data, used to determine the correct ASR\nmodel to use, with other contextual information."
-        },
-        "audio": {
-          "type": "string",
-          "format": "byte",
-          "description": "Audio data to transcribe."
-        }
-      },
-      "description": "The top-level messages sent by the client for the `StreamASRWithPartials`\nmethod. In this streaming call, multiple `StreamASRWithPartialsRequest`\nmessages should be sent. The first message must contain a `TokenData`\nmessage only and all subsequent messages must contain audio data only."
     },
     "v3StreamASRWithPartialsResponse": {
       "type": "object",
@@ -842,20 +1085,6 @@
         }
       },
       "description": "The top-level messages sent by the server for the `StreamASRWithPartials`\nmethod. This streaming call will return multiple\n`StreamASRWithPartialsResponse` messages. The messages are multiple messages\ncontain partial recognition result from ASR engine and one last message\ncontain an `ASRResult` that be use to update Cobalt Interact session."
-    },
-    "v3StreamTTSRequest": {
-      "type": "object",
-      "properties": {
-        "replyAction": {
-          "$ref": "#/definitions/v3ReplyAction",
-          "description": "Reply action contains reply text and model ID."
-        },
-        "token": {
-          "$ref": "#/definitions/v3TokenData",
-          "description": "Token data to provide session ID and other contextual information."
-        }
-      },
-      "description": "The top-level message sent by the client for the `StreamTTS` method."
     },
     "v3StreamTTSResponse": {
       "type": "object",
@@ -911,21 +1140,6 @@
         }
       },
       "description": "This action indicates that the client application should\ncall the Transcribe method to capture the user's input."
-    },
-    "v3TranscribeRequest": {
-      "type": "object",
-      "properties": {
-        "action": {
-          "$ref": "#/definitions/v3TranscribeAction",
-          "description": "Action defining the transcribe configuration."
-        },
-        "audio": {
-          "type": "string",
-          "format": "byte",
-          "description": "Audio data to transcribe."
-        }
-      },
-      "description": "Data to send to the Transcribe stream. The first message on\nthe stream must be a TranscribeAction, followed by audio data."
     },
     "v3TranscribeResponse": {
       "type": "object",
@@ -1168,6 +1382,103 @@
         }
       },
       "title": "Word level details for recognized words in a transcript"
+    },
+    "voicegenv1AudioCodec": {
+      "type": "string",
+      "enum": [
+        "AUDIO_CODEC_UNSPECIFIED",
+        "AUDIO_CODEC_RAW",
+        "AUDIO_CODEC_WAV"
+      ],
+      "default": "AUDIO_CODEC_UNSPECIFIED",
+      "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_CODEC_UNSPECIFIED: AUDIO_CODEC_UNSPECIFIED is the default value of this type.\n - AUDIO_CODEC_RAW: Raw data without any headers\n - AUDIO_CODEC_WAV: WAV with RIFF headers"
+    },
+    "voicegenv1AudioEncoding": {
+      "type": "string",
+      "enum": [
+        "AUDIO_ENCODING_UNSPECIFIED",
+        "AUDIO_ENCODING_SIGNED",
+        "AUDIO_ENCODING_UNSIGNED",
+        "AUDIO_ENCODING_IEEE_FLOAT",
+        "AUDIO_ENCODING_ULAW",
+        "AUDIO_ENCODING_ALAW"
+      ],
+      "default": "AUDIO_ENCODING_UNSPECIFIED",
+      "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_ENCODING_UNSPECIFIED: AUDIO_ENCODING_UNSPECIFIED is the default value of this type and will\nresult in an error.\n - AUDIO_ENCODING_SIGNED: PCM signed-integer\n - AUDIO_ENCODING_UNSIGNED: PCM unsigned-integer\n - AUDIO_ENCODING_IEEE_FLOAT: PCM IEEE-Float\n - AUDIO_ENCODING_ULAW: G.711 mu-law\n - AUDIO_ENCODING_ALAW: G.711 a-law"
+    },
+    "voicegenv1AudioFormat": {
+      "type": "object",
+      "properties": {
+        "sampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Sampling rate in Hz."
+        },
+        "channels": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Number of channels present in the audio. E.g.: 1 (mono), 2 (stereo), etc."
+        },
+        "bitDepth": {
+          "type": "integer",
+          "format": "int64",
+          "description": "Bit depth of each sample (e.g. 8, 16, 24, 32, etc.)."
+        },
+        "codec": {
+          "$ref": "#/definitions/voicegenv1AudioCodec",
+          "description": "Codec of the samples."
+        },
+        "encoding": {
+          "$ref": "#/definitions/voicegenv1AudioEncoding",
+          "description": "Encoding of the samples."
+        },
+        "byteOrder": {
+          "$ref": "#/definitions/voicegenv1ByteOrder",
+          "description": "Byte order of the samples. This field must be set to a value other than\n`BYTE_ORDER_UNSPECIFIED` when the `bit_depth` is greater than 8."
+        }
+      },
+      "title": "Details of audio in format"
+    },
+    "voicegenv1ByteOrder": {
+      "type": "string",
+      "enum": [
+        "BYTE_ORDER_UNSPECIFIED",
+        "BYTE_ORDER_LITTLE_ENDIAN",
+        "BYTE_ORDER_BIG_ENDIAN"
+      ],
+      "default": "BYTE_ORDER_UNSPECIFIED",
+      "description": "- BYTE_ORDER_UNSPECIFIED: BYTE_ORDER_UNSPECIFIED is the default value of this type.\n - BYTE_ORDER_LITTLE_ENDIAN: Little Endian byte order\n - BYTE_ORDER_BIG_ENDIAN: Big Endian byte order",
+      "title": "Byte order of multi-byte data"
+    },
+    "voicegenv1ModelAttributes": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "Language of the model."
+        },
+        "phoneSet": {
+          "$ref": "#/definitions/v1PhoneSet",
+          "description": "The set of phonemes this model uses to represent how words should be pronounced."
+        },
+        "nativeAudioFormat": {
+          "$ref": "#/definitions/voicegenv1AudioFormat",
+          "description": "Native audio format of the model. This will be use as default value if audio format\nin `SynthesisConfig` is not specify."
+        },
+        "supportedFeatures": {
+          "$ref": "#/definitions/v1ModelFeatures",
+          "description": "Supported model features."
+        },
+        "speakers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SpeakerInfo"
+          },
+          "description": "List of speaker available for use in this model."
+        }
+      },
+      "title": "Attributes of a VoiceGen Model"
     }
   }
 }
