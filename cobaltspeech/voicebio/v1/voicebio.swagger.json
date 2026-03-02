@@ -16,6 +16,40 @@
     "application/json"
   ],
   "paths": {
+    "/api/voicebio/v1/compare-voiceprints": {
+      "post": {
+        "summary": "Compares pre-extracted voiceprints and returns similarity scores and match\nresults without needing to send audio data. This is useful in cases where\nthe user wants to compare a given voiceprint against a large number of\nother voiceprints, and sending audio data for each comparison would be\ninefficient. The client can enroll the voiceprint once using the\n`StreamingEnroll` method, and then use this method to compare it against a\nlarge number of other voiceprints in batches.",
+        "operationId": "VoiceBioService_CompareVoiceprints",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1CompareVoiceprintsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top level message sent by the client for the `CompareVoiceprints` method.\nThis is similar to StreamingIdentifyRequest, but operates on pre-extracted\nvoiceprints without sending any audio data.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1CompareVoiceprintsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "VoiceBioService"
+        ]
+      }
+    },
     "/api/voicebio/v1/list-models": {
       "get": {
         "summary": "Returns information about the models available on the server.",
@@ -157,6 +191,7 @@
     "/api/voicebio/v1/streaming-identify": {
       "get": {
         "summary": "Compares audio data against the provided list of voiceprints and identifies\nwhich (or none) of the voiceprints is a match for the given audio.",
+        "description": "If you have a large list of voiceprints that you want to compare against in\nbatches, and you want to avoid sending audio data for each comparison, you\ncan use the `CompareVoiceprints` method instead, which operates on\npre-extracted voiceprints without requiring any audio data. You would first\nneed to extract the voiceprint from the audio using the `StreamingEnroll`\nmethod, and then use that voiceprint in the `CompareVoiceprints` method as\nthe target voiceprint.",
         "operationId": "VoiceBioService_StreamingIdentify",
         "responses": {
           "200": {
@@ -375,6 +410,40 @@
         ]
       }
     },
+    "/api/voicebio/v1/vectorize-voiceprints": {
+      "post": {
+        "summary": "Converts the given voiceprints into numerical vector representations that\ncan be used for various downstream tasks such as clustering, visualization,\nor as input features for other machine learning models. The specific format\nand dimensionality of these vectors may vary depending on the model used.",
+        "operationId": "VoiceBioService_VectorizeVoiceprints",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1VectorizeVoiceprintsResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "description": "The top level message sent by the client for the `VectorizeVoiceprints` method.",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/v1VectorizeVoiceprintsRequest"
+            }
+          }
+        ],
+        "tags": [
+          "VoiceBioService"
+        ]
+      }
+    },
     "/api/voicebio/v1/version": {
       "get": {
         "summary": "Returns version information from the server.",
@@ -517,6 +586,47 @@
       "description": "- BYTE_ORDER_UNSPECIFIED: BYTE_ORDER_UNSPECIFIED is the default value of this type.\n - BYTE_ORDER_LITTLE_ENDIAN: Little Endian byte order\n - BYTE_ORDER_BIG_ENDIAN: Big Endian byte order",
       "title": "Byte order of multi-byte data"
     },
+    "v1CompareVoiceprintsRequest": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "ID of the model to use for comparison. The model used for comparison must\nmatch with the model used for enrollment of the voiceprints. A list of\nsupported IDs can be found using the `ListModels` call."
+        },
+        "targetVoiceprint": {
+          "$ref": "#/definitions/v1Voiceprint",
+          "description": "The voiceprint to compare against the reference voiceprints."
+        },
+        "referenceVoiceprints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Voiceprint"
+          },
+          "description": "Voiceprints that should be compared against the target voiceprint."
+        }
+      },
+      "description": "The top level message sent by the client for the `CompareVoiceprints` method.\nThis is similar to StreamingIdentifyRequest, but operates on pre-extracted\nvoiceprints without sending any audio data."
+    },
+    "v1CompareVoiceprintsResponse": {
+      "type": "object",
+      "properties": {
+        "bestMatchIndex": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Index (0-based) of the best matching voiceprint in the list of reference\nvoiceprints provided in the `CompareVoiceprintsRequest` message. If none of\nthe voiceprints was a match, a negative value is returned."
+        },
+        "voiceprintComparisonResults": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1VoiceprintComparisonResult"
+          },
+          "description": "Result of comparing the given the target voiceprint against each of the\nreference voiceprints. The order of this list is the same as the reference\nvoiceprint list provided in the `CompareVoiceprintsRequest` message."
+        }
+      },
+      "description": "The message returned by the server for the `CompareVoiceprints` method. This\ncontains the similarity scores and match results for comparing the target\nvoiceprint against each of the reference voiceprints, as well as the index of\nthe best matching voiceprint in the reference list, if any of them is a\nmatch. This is similar to StreamingIdentifyResponse, but operates on\npre-extracted voiceprints without sending any audio data."
+    },
     "v1EnrollmentConfig": {
       "type": "object",
       "properties": {
@@ -654,6 +764,52 @@
         }
       },
       "description": "The message returned by the server for the `StreamingVerify` method."
+    },
+    "v1VectorVoiceprint": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "format": "float"
+          },
+          "description": "List of floating point values representing the voiceprint in vector form."
+        }
+      },
+      "description": "Voiceprint represented in vector form. The specific format and dimensionality\nof this vector may vary depending on the model used. The `VectorizeVoiceprints`\nmethod can be used to convert a `Voiceprint` into a `VectorVoiceprint`\nrepresentation."
+    },
+    "v1VectorizeVoiceprintsRequest": {
+      "type": "object",
+      "properties": {
+        "modelId": {
+          "type": "string",
+          "description": "ID of the model to use for vectorization. The model used for vectorization must\nmatch with the model used for enrollment of the voiceprints. A list of\nsupported IDs can be found using the `ListModels` call."
+        },
+        "voiceprints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1Voiceprint"
+          },
+          "description": "Voiceprints to be vectorized."
+        }
+      },
+      "description": "The top level message sent by the client for the `VectorizeVoiceprints` method."
+    },
+    "v1VectorizeVoiceprintsResponse": {
+      "type": "object",
+      "properties": {
+        "voiceprints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1VectorVoiceprint"
+          },
+          "description": "Voiceprint data converted into a vector representation, which can be used\nfor various downstream tasks such as clustering, visualization, or as input\nfeatures for other machine learning models. The specific format and\ndimensionality of these vectors may vary depending on the model used.\n\nThe order of this list is the same as the input voiceprint list provided in\nthe `VectorizeVoiceprintsRequest` message."
+        }
+      },
+      "description": "The message returned by the server for the `VectorizeVoiceprints` method."
     },
     "v1VerificationConfig": {
       "type": "object",

@@ -24,7 +24,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/bluehengev2CreateSessionResponse"
+              "$ref": "#/definitions/bluehengeV2CreateSessionResponse"
             }
           },
           "default": {
@@ -41,7 +41,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/bluehengev2CreateSessionRequest"
+              "$ref": "#/definitions/bluehengeV2CreateSessionRequest"
             }
           }
         ],
@@ -58,7 +58,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/bluehengev2DeleteSessionResponse"
+              "$ref": "#/definitions/bluehengeV2DeleteSessionResponse"
             }
           },
           "default": {
@@ -75,7 +75,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/bluehengev2DeleteSessionRequest"
+              "$ref": "#/definitions/bluehengeV2DeleteSessionRequest"
             }
           }
         ],
@@ -282,7 +282,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/cobaltspeechbluehengev2ListModelsResponse"
+              "$ref": "#/definitions/bluehengeV2ListModelsResponse"
             }
           },
           "default": {
@@ -384,7 +384,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/bluehengev2UpdateSessionResponse"
+              "$ref": "#/definitions/bluehengeV2UpdateSessionResponse"
             }
           },
           "default": {
@@ -401,7 +401,7 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/bluehengev2UpdateSessionRequest"
+              "$ref": "#/definitions/bluehengeV2UpdateSessionRequest"
             }
           }
         ],
@@ -418,7 +418,7 @@
           "200": {
             "description": "A successful response.",
             "schema": {
-              "$ref": "#/definitions/cobaltspeechbluehengev2VersionResponse"
+              "$ref": "#/definitions/bluehengeV2VersionResponse"
             }
           },
           "default": {
@@ -435,90 +435,92 @@
     }
   },
   "definitions": {
-    "bluehengev2CreateSessionRequest": {
+    "bluehengeV2CreateSessionRequest": {
       "type": "object",
       "properties": {
         "diathekeCreateSessionRequest": {
-          "$ref": "#/definitions/diathekev3CreateSessionRequest"
+          "$ref": "#/definitions/diathekeV3CreateSessionRequest"
         }
       },
       "description": "The top-level message sent by the client for the `CreateSession` method."
     },
-    "bluehengev2CreateSessionResponse": {
+    "bluehengeV2CreateSessionResponse": {
       "type": "object",
       "properties": {
         "diathekeCreateSessionResponse": {
-          "$ref": "#/definitions/diathekev3CreateSessionResponse"
+          "$ref": "#/definitions/diathekeV3CreateSessionResponse"
         }
       },
       "description": "The top-level message sent by the server for the `CreateSession` method."
     },
-    "bluehengev2DeleteSessionRequest": {
+    "bluehengeV2DeleteSessionRequest": {
       "type": "object",
       "properties": {
         "diathekeDeleteSessionRequest": {
-          "$ref": "#/definitions/diathekev3DeleteSessionRequest"
+          "$ref": "#/definitions/diathekeV3DeleteSessionRequest"
         }
       },
       "description": "The top-level message sent by the client for the `DeleteSession` method."
     },
-    "bluehengev2DeleteSessionResponse": {
+    "bluehengeV2DeleteSessionResponse": {
       "type": "object",
       "properties": {
         "diathekeDeleteSessionResponse": {
-          "$ref": "#/definitions/diathekev3DeleteSessionResponse"
+          "$ref": "#/definitions/diathekeV3DeleteSessionResponse"
         }
       },
       "description": "The top-level message sent by the server for the `DeleteSession` method."
     },
-    "bluehengev2StreamASRResponse": {
+    "bluehengeV2ListModelsResponse": {
       "type": "object",
       "properties": {
-        "diathekeStreamAsrResponse": {
-          "$ref": "#/definitions/diathekev3StreamASRResponse",
-          "title": "could be streamASRresponse instead of data"
+        "diathekeListModelsResponse": {
+          "$ref": "#/definitions/diathekeV3ListModelsResponse"
         }
       },
-      "description": "The top-level message sent by the server for the `StreamASR` method."
+      "description": "A list of models available on the Bluehenge server."
     },
-    "bluehengev2StreamTTSResponse": {
-      "type": "object",
-      "properties": {
-        "audio": {
-          "type": "string",
-          "format": "byte"
-        }
-      },
-      "description": "The top-level message sent by the server for the `StreamTTS` method."
-    },
-    "bluehengev2TranscribeResponse": {
-      "type": "object",
-      "properties": {
-        "diathekeTranscribeResponse": {
-          "$ref": "#/definitions/diathekev3TranscribeResponse"
-        }
-      },
-      "description": "The top-level message sent by the server for the `Transcribe` method."
-    },
-    "bluehengev2UpdateSessionRequest": {
+    "bluehengeV2UpdateSessionRequest": {
       "type": "object",
       "properties": {
         "diathekeUpdateSessionRequest": {
-          "$ref": "#/definitions/diathekev3UpdateSessionRequest"
+          "$ref": "#/definitions/diathekeV3UpdateSessionRequest"
         }
       },
       "description": "The top-level message sent by the client for the `UpdateSession` method."
     },
-    "bluehengev2UpdateSessionResponse": {
+    "bluehengeV2UpdateSessionResponse": {
       "type": "object",
       "properties": {
         "diathekeUpdateSessionResponse": {
-          "$ref": "#/definitions/diathekev3UpdateSessionResponse"
+          "$ref": "#/definitions/diathekeV3UpdateSessionResponse"
         }
       },
       "description": "The top-level message sent by the server for the `UpdateSession` method."
     },
-    "cobaltspeechbluehengev2Entity": {
+    "bluehengeV2VersionResponse": {
+      "type": "object",
+      "properties": {
+        "bluehenge": {
+          "type": "string",
+          "title": "Version of the Bluehenge server/engine"
+        },
+        "diathekeVersionResponse": {
+          "$ref": "#/definitions/diathekeV3VersionResponse",
+          "title": "Diatheke Version Response"
+        },
+        "sourceDataVersion": {
+          "type": "string",
+          "description": "The date when the source data was last updated.  Source data includes PDFs\nand anything else used to populate the knowledge graph.  Updates to this\nversion imply a new version of knowledge_graph_version."
+        },
+        "knowledgeGraphVersion": {
+          "type": "string",
+          "description": "The build date of the knowledge graph in use.  The knowledge graph is\ngenerated from the source data, but can be updated or modified multiple\ntimes given the same source data, hence the separate version."
+        }
+      },
+      "description": "Lists the version of the Bluehenge server."
+    },
+    "cobaltspeechBluehengeV2Entity": {
       "type": "object",
       "properties": {
         "id": {
@@ -548,38 +550,7 @@
       },
       "description": "Entities are one of the core information storing blocks in\nthe knowledge graph. They can have images or be part of\nextractions. This makes them extremely versitile.\nEntities are used when you want to display information not\ncontained in Procedures or Tree. For example, question/answering\ncontent, details about aircraft parts, etc."
     },
-    "cobaltspeechbluehengev2ListModelsResponse": {
-      "type": "object",
-      "properties": {
-        "diathekeListModelsResponse": {
-          "$ref": "#/definitions/diathekev3ListModelsResponse"
-        }
-      },
-      "description": "A list of models available on the Bluehenge server."
-    },
-    "cobaltspeechbluehengev2VersionResponse": {
-      "type": "object",
-      "properties": {
-        "bluehenge": {
-          "type": "string",
-          "title": "Version of the Bluehenge server/engine"
-        },
-        "diathekeVersionResponse": {
-          "$ref": "#/definitions/diathekev3VersionResponse",
-          "title": "Diatheke Version Response"
-        },
-        "sourceDataVersion": {
-          "type": "string",
-          "description": "The date when the source data was last updated.  Source data includes PDFs\nand anything else used to populate the knowledge graph.  Updates to this\nversion imply a new version of knowledge_graph_version."
-        },
-        "knowledgeGraphVersion": {
-          "type": "string",
-          "description": "The build date of the knowledge graph in use.  The knowledge graph is\ngenerated from the source data, but can be updated or modified multiple\ntimes given the same source data, hence the separate version."
-        }
-      },
-      "description": "Lists the version of the Bluehenge server."
-    },
-    "cobaltspeechchosunv2Entity": {
+    "cobaltspeechChosunV2Entity": {
       "type": "object",
       "properties": {
         "id": {
@@ -608,7 +579,7 @@
       },
       "description": "An entity recognized from the input text."
     },
-    "diathekev3AudioCodec": {
+    "diathekeV3AudioCodec": {
       "type": "string",
       "enum": [
         "AUDIO_CODEC_UNSPECIFIED",
@@ -621,7 +592,7 @@
       "default": "AUDIO_CODEC_UNSPECIFIED",
       "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_CODEC_UNSPECIFIED: AUDIO_CODEC_UNSPECIFIED is the default value of this type.\n - AUDIO_CODEC_RAW: Raw data without any headers\n - AUDIO_CODEC_WAV: WAV with RIFF headers\n - AUDIO_CODEC_MP3: MP3 format with a valid frame header at the beginning of data\n - AUDIO_CODEC_FLAC: FLAC format\n - AUDIO_CODEC_OGG_OPUS: Opus format with OGG header"
     },
-    "diathekev3AudioEncoding": {
+    "diathekeV3AudioEncoding": {
       "type": "string",
       "enum": [
         "AUDIO_ENCODING_UNSPECIFIED",
@@ -634,7 +605,7 @@
       "default": "AUDIO_ENCODING_UNSPECIFIED",
       "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_ENCODING_UNSPECIFIED: AUDIO_ENCODING_UNSPECIFIED is the default value of this type and will\nresult in an error.\n - AUDIO_ENCODING_SIGNED: PCM signed-integer\n - AUDIO_ENCODING_UNSIGNED: PCM unsigned-integer\n - AUDIO_ENCODING_IEEE_FLOAT: PCM IEEE-Float\n - AUDIO_ENCODING_ULAW: G.711 mu-law\n - AUDIO_ENCODING_ALAW: G.711 a-law"
     },
-    "diathekev3AudioFormat": {
+    "diathekeV3AudioFormat": {
       "type": "object",
       "properties": {
         "sampleRate": {
@@ -653,21 +624,21 @@
           "description": "Bit depth of each sample (e.g. 8, 16, 24, 32, etc.)."
         },
         "codec": {
-          "$ref": "#/definitions/diathekev3AudioCodec",
+          "$ref": "#/definitions/diathekeV3AudioCodec",
           "description": "Codec of the samples."
         },
         "encoding": {
-          "$ref": "#/definitions/diathekev3AudioEncoding",
+          "$ref": "#/definitions/diathekeV3AudioEncoding",
           "description": "Encoding of the samples."
         },
         "byteOrder": {
-          "$ref": "#/definitions/diathekev3ByteOrder",
+          "$ref": "#/definitions/diathekeV3ByteOrder",
           "description": "Byte order of the samples. This field must be set to a value other than\n`BYTE_ORDER_UNSPECIFIED` when the `bit_depth` is greater than 8."
         }
       },
       "title": "Details of audio in format"
     },
-    "diathekev3ByteOrder": {
+    "diathekeV3ByteOrder": {
       "type": "string",
       "enum": [
         "BYTE_ORDER_UNSPECIFIED",
@@ -678,7 +649,7 @@
       "description": "- BYTE_ORDER_UNSPECIFIED: BYTE_ORDER_UNSPECIFIED is the default value of this type.\n - BYTE_ORDER_LITTLE_ENDIAN: Little Endian byte order\n - BYTE_ORDER_BIG_ENDIAN: Big Endian byte order",
       "title": "Byte order of multi-byte data"
     },
-    "diathekev3CreateSessionRequest": {
+    "diathekeV3CreateSessionRequest": {
       "type": "object",
       "properties": {
         "modelId": {
@@ -694,17 +665,17 @@
           "description": "This is an optional field to provide any metadata associated with the\nsession. The server may record this metadata when processing the\nrequest. The server does not use this field for any other purpose."
         },
         "inputAudioFormat": {
-          "$ref": "#/definitions/diathekev3AudioFormat",
+          "$ref": "#/definitions/diathekeV3AudioFormat",
           "description": "Format of the audio system expects to recieve. This is an optional\nfield, and if no value is specified, input will be assumed to be raw\nbytes (PCM16SLE) at the sample rate that speech processing models\nare configured to use on the server."
         },
         "outputAudioFormat": {
-          "$ref": "#/definitions/diathekev3AudioFormat",
+          "$ref": "#/definitions/diathekeV3AudioFormat",
           "description": "Format of the audio client expects to recieve. This is an optional\nfield. If no value is specified, the output will be produced with a\nnative audio format that text-to-speech models are configured on\nthe server."
         }
       },
       "description": "The top-level message sent by the client for the `CreateSession` method."
     },
-    "diathekev3CreateSessionResponse": {
+    "diathekeV3CreateSessionResponse": {
       "type": "object",
       "properties": {
         "sessionOutput": {
@@ -713,7 +684,7 @@
       },
       "description": "The top-level message sent by the server for the `CreateSession` method."
     },
-    "diathekev3DeleteSessionRequest": {
+    "diathekeV3DeleteSessionRequest": {
       "type": "object",
       "properties": {
         "tokenData": {
@@ -722,141 +693,28 @@
       },
       "description": "The top-level message sent by the client for the `DeleteSession` method."
     },
-    "diathekev3DeleteSessionResponse": {
+    "diathekeV3DeleteSessionResponse": {
       "type": "object",
       "description": "The top-level message sent by the server for the `DeleteSession` method."
     },
-    "diathekev3ListModelsRequest": {
+    "diathekeV3ListModelsRequest": {
       "type": "object",
       "description": "The top-level message sent by the client for the `ListModels` method."
     },
-    "diathekev3ListModelsResponse": {
+    "diathekeV3ListModelsResponse": {
       "type": "object",
       "properties": {
         "models": {
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/diathekev3ModelInfo"
+            "$ref": "#/definitions/v3ModelInfo"
           }
         }
       },
       "description": "A list of models available on the Diatheke server."
     },
-    "diathekev3ModelInfo": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "description": "Diatheke model ID, which is used to create a new session."
-        },
-        "name": {
-          "type": "string",
-          "description": "Pretty model name, which may be used for display purposes."
-        },
-        "language": {
-          "type": "string",
-          "description": "Language code of the model."
-        },
-        "asrSampleRate": {
-          "type": "integer",
-          "format": "int64",
-          "description": "The ASR audio sample rate, if ASR is enabled."
-        },
-        "ttsSampleRate": {
-          "type": "integer",
-          "format": "int64",
-          "description": "The TTS audio sample rate, if TTS is enabled."
-        },
-        "ttsModelAttributes": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/voicegenv1ModelAttributes"
-          }
-        }
-      },
-      "description": "Information about a single Diatheke model."
-    },
-    "diathekev3StreamASRRequest": {
-      "type": "object",
-      "properties": {
-        "token": {
-          "$ref": "#/definitions/v3TokenData",
-          "description": "Session data, used to determine the correct Cubic\nmodel to use for ASR, with other contextual\ninformation."
-        },
-        "audio": {
-          "type": "string",
-          "format": "byte",
-          "description": "Audio data to transcribe."
-        }
-      },
-      "description": "Data to send to the ASR stream. The first message on the\nstream must be the session token followed by audio data."
-    },
-    "diathekev3StreamASRResponse": {
-      "type": "object",
-      "properties": {
-        "asrResult": {
-          "$ref": "#/definitions/v3ASRResult"
-        }
-      }
-    },
-    "diathekev3StreamTTSRequest": {
-      "type": "object",
-      "properties": {
-        "replyAction": {
-          "$ref": "#/definitions/v3ReplyAction",
-          "description": "Reply action contains reply text and model ID."
-        },
-        "token": {
-          "$ref": "#/definitions/v3TokenData",
-          "description": "Token data to provide session ID and other contextual information."
-        },
-        "synthesisConfig": {
-          "$ref": "#/definitions/v1SynthesisConfig"
-        }
-      },
-      "description": "The top-level message sent by the client for the `StreamTTS` method."
-    },
-    "diathekev3TranscribeRequest": {
-      "type": "object",
-      "properties": {
-        "action": {
-          "$ref": "#/definitions/v3TranscribeAction",
-          "description": "Action defining the transcribe configuration."
-        },
-        "audio": {
-          "type": "string",
-          "format": "byte",
-          "description": "Audio data to transcribe."
-        }
-      },
-      "description": "Data to send to the Transcribe stream. The first message on\nthe stream must be a TranscribeAction, followed by audio data."
-    },
-    "diathekev3TranscribeResponse": {
-      "type": "object",
-      "properties": {
-        "text": {
-          "type": "string",
-          "description": "The transcription."
-        },
-        "confidence": {
-          "type": "number",
-          "format": "double",
-          "description": "Confidence estimate between 0 and 1. A higher number\nrepresents a higher likelihood that the transcription\nis correct."
-        },
-        "isPartial": {
-          "type": "boolean",
-          "description": "True if this is a partial result, in which case the\nnext result will be for the same audio, either repeating\nor correcting the text in this result. When false, this\nrepresents the final transcription for an utterance, which\nwill not change with further audio input. It is sent when\nthe ASR has identified an endpoint. After the final\ntranscription is sent, any additional results sent on the\nTranscribe stream belong to the next utterance."
-        },
-        "cubicResult": {
-          "$ref": "#/definitions/v5RecognitionResult",
-          "description": "Cubic recognition result."
-        }
-      },
-      "description": "The result from the Transcribe stream. Usually, several partial\n(or intermediate) transcriptions will be sent until the final\ntranscription is ready for every utterance processed."
-    },
-    "diathekev3UpdateSessionRequest": {
+    "diathekeV3UpdateSessionRequest": {
       "type": "object",
       "properties": {
         "sessionInput": {
@@ -865,7 +723,7 @@
       },
       "description": "The top-level message sent by the client for the `UpdateSession` method."
     },
-    "diathekev3UpdateSessionResponse": {
+    "diathekeV3UpdateSessionResponse": {
       "type": "object",
       "properties": {
         "sessionOutput": {
@@ -874,7 +732,7 @@
       },
       "description": "The top-level message sent by the server for the `UpdateSession` method."
     },
-    "diathekev3VersionResponse": {
+    "diathekeV3VersionResponse": {
       "type": "object",
       "properties": {
         "diatheke": {
@@ -923,6 +781,36 @@
           }
         }
       }
+    },
+    "v1ModelAttributes": {
+      "type": "object",
+      "properties": {
+        "language": {
+          "type": "string",
+          "description": "Language of the model."
+        },
+        "phoneSet": {
+          "$ref": "#/definitions/v1PhoneSet",
+          "description": "The set of phonemes this model uses to represent how words should be pronounced."
+        },
+        "nativeAudioFormat": {
+          "$ref": "#/definitions/voicegenV1AudioFormat",
+          "description": "Native audio format of the model. This will be use as default value if audio format\nin `SynthesisConfig` is not specify."
+        },
+        "supportedFeatures": {
+          "$ref": "#/definitions/v1ModelFeatures",
+          "description": "Supported model features."
+        },
+        "speakers": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1SpeakerInfo"
+          },
+          "description": "List of speaker available for use in this model."
+        }
+      },
+      "title": "Attributes of a VoiceGen Model"
     },
     "v1ModelFeatures": {
       "type": "object",
@@ -980,34 +868,6 @@
       },
       "title": "Description of a speaker"
     },
-    "v1SynthesisConfig": {
-      "type": "object",
-      "properties": {
-        "modelId": {
-          "type": "string",
-          "description": "Unique identifier of the model to use, as obtained from a `ModelInfo` message."
-        },
-        "speakerId": {
-          "type": "string",
-          "description": "Unique identifier of the speaker to use, as obtained from a `SpeakerInfo` message."
-        },
-        "audioFormat": {
-          "$ref": "#/definitions/voicegenv1AudioFormat",
-          "description": "Format of the audio to be sent for synthesis. If no value specify, default value\nof native audio format of the specified model will be used. Native audio format\ncan be obtained from `ModelAttributes` message."
-        },
-        "speechRate": {
-          "type": "number",
-          "format": "float",
-          "description": "The speech rate for synthesized audio. If unset, then the default speech rate of\na given model is used. Otherwise a value \u003e 0 should be used, with higher values\nresulting in faster speech. This field only has an effect on the synthesized audio\nif the model supports it, which can be ascertained from the\n`ModelAttributes.supported_features`."
-        },
-        "variationScale": {
-          "type": "number",
-          "format": "float",
-          "description": "A scale with values \u003e 0, to determine how much to randomly vary the synthesized\naudio by altering stresses and emphasis on different parts of the audio. Higher\nvalues correspond to greater variation. This field only has an affect on the\nsynthesized audio if the model supports it, which can be ascertained from the\n`ModelAttributes.supported_features`."
-        }
-      },
-      "title": "Configuration for setting up a Synthesizer"
-    },
     "v2Extraction": {
       "type": "object",
       "properties": {
@@ -1016,11 +876,11 @@
           "description": "Unique ID of the extraction in the knowledge graph."
         },
         "subject": {
-          "$ref": "#/definitions/cobaltspeechbluehengev2Entity",
+          "$ref": "#/definitions/cobaltspeechBluehengeV2Entity",
           "title": "The subject of the extraction"
         },
         "object": {
-          "$ref": "#/definitions/cobaltspeechbluehengev2Entity",
+          "$ref": "#/definitions/cobaltspeechBluehengeV2Entity",
           "title": "The object of the extraction"
         },
         "relation": {
@@ -1068,7 +928,7 @@
       "type": "object",
       "properties": {
         "entity": {
-          "$ref": "#/definitions/cobaltspeechbluehengev2Entity",
+          "$ref": "#/definitions/cobaltspeechBluehengeV2Entity",
           "description": "The extraction data object."
         }
       },
@@ -1138,16 +998,6 @@
       },
       "description": "Returns all data related to a single task."
     },
-    "v2GetTreeResponse": {
-      "type": "object",
-      "properties": {
-        "tree": {
-          "$ref": "#/definitions/v2Tree",
-          "description": "Individual tree requested."
-        }
-      },
-      "description": "Returns all data related to a single tree."
-    },
     "v2ImageData": {
       "type": "object",
       "properties": {
@@ -1186,7 +1036,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/cobaltspeechchosunv2Entity"
+            "$ref": "#/definitions/cobaltspeechChosunV2Entity"
           },
           "description": "The list of entities recognized with this intent."
         },
@@ -1204,7 +1054,7 @@
           "type": "array",
           "items": {
             "type": "object",
-            "$ref": "#/definitions/cobaltspeechbluehengev2Entity"
+            "$ref": "#/definitions/cobaltspeechBluehengeV2Entity"
           }
         }
       },
@@ -1489,43 +1339,6 @@
       },
       "description": "A simplified representation of a task.\nUseful for getting a full list of all Tasks without\ngetting all of the underlying data related to the steps."
     },
-    "v2Tree": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "title": "Unique ID of the tree"
-        },
-        "treeName": {
-          "type": "string",
-          "title": "User facing name of the tree"
-        },
-        "treeNumber": {
-          "type": "string",
-          "description": "Number of the tree, as defined by the manual."
-        },
-        "additionalNames": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "description": "AdditionalNames of the task\nOther ways to refer to the tree."
-        },
-        "prerequisitesWarningText": {
-          "type": "string",
-          "title": "A caution that the user should hear before starting work"
-        },
-        "nodes": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v2TreeNode"
-          },
-          "description": "Ordered list (not any treelike structure) of all nodes inside of a tree."
-        }
-      },
-      "description": "Representation of the root node of a troubleshooting Tree.\nContains general information about tree and all child nodes."
-    },
     "v2TreeLite": {
       "type": "object",
       "properties": {
@@ -1543,68 +1356,6 @@
         }
       },
       "description": "A simplified representation of a tree.\nSee Tree for full details of a tree.\n\nTreeLite is useful for getting a full list of all trees\nwithout getting all of the underlying data related to its TreeNodes."
-    },
-    "v2TreeNode": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "title": "Unique ID of the tree"
-        },
-        "nodeIndex": {
-          "type": "string",
-          "title": "Index/key of node in the tree"
-        },
-        "instructionText": {
-          "type": "string",
-          "description": "Instructions of the step, pulled directly from the manual."
-        },
-        "options": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v2TroubleOptions"
-          },
-          "title": "List of troubleshooting options at given step"
-        },
-        "image": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "title": "Image of the step\nA URL or relative path to where the multiple media is stored"
-        },
-        "parts": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          },
-          "title": "The parts mentioned in the step"
-        },
-        "notes": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v2Note"
-          },
-          "title": "List of notes of the step\nUser defined notes associated with this specific step"
-        }
-      },
-      "description": "Representation of single node in a Tree."
-    },
-    "v2TroubleOptions": {
-      "type": "object",
-      "properties": {
-        "condition": {
-          "type": "string",
-          "description": "Condition that needs to be true for next step\ne.g. \"Yes\", \"No\", \"On\", \"Off\", \"Has fuel\", etc."
-        },
-        "destination": {
-          "type": "string",
-          "title": "The node_index of the next step"
-        }
-      },
-      "description": "User defined notes."
     },
     "v3ASRResult": {
       "type": "object",
@@ -1691,6 +1442,41 @@
         }
       },
       "description": "The result of executing a command."
+    },
+    "v3ModelInfo": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Diatheke model ID, which is used to create a new session."
+        },
+        "name": {
+          "type": "string",
+          "description": "Pretty model name, which may be used for display purposes."
+        },
+        "language": {
+          "type": "string",
+          "description": "Language code of the model."
+        },
+        "asrSampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The ASR audio sample rate, if ASR is enabled."
+        },
+        "ttsSampleRate": {
+          "type": "integer",
+          "format": "int64",
+          "description": "The TTS audio sample rate, if TTS is enabled."
+        },
+        "ttsModelAttributes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1ModelAttributes"
+          }
+        }
+      },
+      "description": "Information about a single Diatheke model."
     },
     "v3ReplyAction": {
       "type": "object",
@@ -2016,7 +1802,7 @@
       },
       "title": "Word level details for recognized words in a transcript"
     },
-    "voicegenv1AudioCodec": {
+    "voicegenV1AudioCodec": {
       "type": "string",
       "enum": [
         "AUDIO_CODEC_UNSPECIFIED",
@@ -2026,7 +1812,7 @@
       "default": "AUDIO_CODEC_UNSPECIFIED",
       "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_CODEC_UNSPECIFIED: AUDIO_CODEC_UNSPECIFIED is the default value of this type.\n - AUDIO_CODEC_RAW: Raw data without any headers\n - AUDIO_CODEC_WAV: WAV with RIFF headers"
     },
-    "voicegenv1AudioEncoding": {
+    "voicegenV1AudioEncoding": {
       "type": "string",
       "enum": [
         "AUDIO_ENCODING_UNSPECIFIED",
@@ -2039,7 +1825,7 @@
       "default": "AUDIO_ENCODING_UNSPECIFIED",
       "description": "The encoding of the audio data to be sent for synthesis.\n\n - AUDIO_ENCODING_UNSPECIFIED: AUDIO_ENCODING_UNSPECIFIED is the default value of this type and will\nresult in an error.\n - AUDIO_ENCODING_SIGNED: PCM signed-integer\n - AUDIO_ENCODING_UNSIGNED: PCM unsigned-integer\n - AUDIO_ENCODING_IEEE_FLOAT: PCM IEEE-Float\n - AUDIO_ENCODING_ULAW: G.711 mu-law\n - AUDIO_ENCODING_ALAW: G.711 a-law"
     },
-    "voicegenv1AudioFormat": {
+    "voicegenV1AudioFormat": {
       "type": "object",
       "properties": {
         "sampleRate": {
@@ -2058,21 +1844,21 @@
           "description": "Bit depth of each sample (e.g. 8, 16, 24, 32, etc.)."
         },
         "codec": {
-          "$ref": "#/definitions/voicegenv1AudioCodec",
+          "$ref": "#/definitions/voicegenV1AudioCodec",
           "description": "Codec of the samples."
         },
         "encoding": {
-          "$ref": "#/definitions/voicegenv1AudioEncoding",
+          "$ref": "#/definitions/voicegenV1AudioEncoding",
           "description": "Encoding of the samples."
         },
         "byteOrder": {
-          "$ref": "#/definitions/voicegenv1ByteOrder",
+          "$ref": "#/definitions/voicegenV1ByteOrder",
           "description": "Byte order of the samples. This field must be set to a value other than\n`BYTE_ORDER_UNSPECIFIED` when the `bit_depth` is greater than 8."
         }
       },
       "title": "Details of audio in format"
     },
-    "voicegenv1ByteOrder": {
+    "voicegenV1ByteOrder": {
       "type": "string",
       "enum": [
         "BYTE_ORDER_UNSPECIFIED",
@@ -2082,36 +1868,6 @@
       "default": "BYTE_ORDER_UNSPECIFIED",
       "description": "- BYTE_ORDER_UNSPECIFIED: BYTE_ORDER_UNSPECIFIED is the default value of this type.\n - BYTE_ORDER_LITTLE_ENDIAN: Little Endian byte order\n - BYTE_ORDER_BIG_ENDIAN: Big Endian byte order",
       "title": "Byte order of multi-byte data"
-    },
-    "voicegenv1ModelAttributes": {
-      "type": "object",
-      "properties": {
-        "language": {
-          "type": "string",
-          "description": "Language of the model."
-        },
-        "phoneSet": {
-          "$ref": "#/definitions/v1PhoneSet",
-          "description": "The set of phonemes this model uses to represent how words should be pronounced."
-        },
-        "nativeAudioFormat": {
-          "$ref": "#/definitions/voicegenv1AudioFormat",
-          "description": "Native audio format of the model. This will be use as default value if audio format\nin `SynthesisConfig` is not specify."
-        },
-        "supportedFeatures": {
-          "$ref": "#/definitions/v1ModelFeatures",
-          "description": "Supported model features."
-        },
-        "speakers": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "$ref": "#/definitions/v1SpeakerInfo"
-          },
-          "description": "List of speaker available for use in this model."
-        }
-      },
-      "title": "Attributes of a VoiceGen Model"
     }
   }
 }
