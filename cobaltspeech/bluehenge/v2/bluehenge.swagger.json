@@ -1488,6 +1488,10 @@
         "lunaModel": {
           "type": "string",
           "title": "TTS model to use with the TTSReply method"
+        },
+        "replyId": {
+          "type": "string",
+          "description": "ID of the reply (or slot prompt) definition in the Diatheke model that\nproduced this text."
         }
       },
       "description": "This action indicates that the client application should\ngive the provided text to the user. This action may also\nbe used to synthesize speech with the StreamTTS method."
