@@ -360,6 +360,13 @@
             "type": "string"
           },
           "description": "List of whitelisted intents. If the list is empty, all intents will be\nconsidered."
+        },
+        "expectedEntities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Entities the caller expects for this query (for example, the slot being\nfilled during slot filling). A slot-fill-aware extractor uses this to tag\na bare answer as the expected slot. These are entity *names*, not values,\nand their order is not significant. If the list is empty, no expectation\nis supplied."
         }
       },
       "description": "Data input for the Parse method."
