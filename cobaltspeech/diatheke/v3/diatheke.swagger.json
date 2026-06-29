@@ -1243,7 +1243,20 @@
         "timestampMs": {
           "type": "string",
           "format": "uint64",
-          "title": "The end-timestamp of the detected wakeword in milliseconds"
+          "description": "The end-timestamp of the detected wakeword in milliseconds."
+        },
+        "confidence": {
+          "type": "number",
+          "format": "double",
+          "description": "Confidence of the detected wakeword."
+        },
+        "isAccepted": {
+          "type": "boolean",
+          "description": "True if the wakeword was accepted."
+        },
+        "metadata": {
+          "type": "string",
+          "description": "Metadata associated with this wakeword result, in JSON format. The contents\nare opaque to the API and may include system-specific information such as the\nlocation of stored audio."
         }
       },
       "description": "The result from the ASR stream, sent when a wakeword has been detected in the\nstream."
